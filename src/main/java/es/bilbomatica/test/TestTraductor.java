@@ -1,7 +1,16 @@
 package es.bilbomatica.test;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Map.Entry;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
@@ -9,37 +18,104 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import es.bilbomatica.test.exceptions.NotEnoughCapacityException;
+import es.bilbomatica.test.logic.PropertyBundle;
 import es.bilbomatica.test.model.TraductorRequest;
 import es.bilbomatica.test.model.TraductorResponse;
 
 public class TestTraductor {
 
-    public static void main(String[] args) {
+	private final static String PROPERTIES_RESOURCE_PATH = "static/ae18b.i18n_es.properties";
+	private final static Integer CHARACTER_LIMIT_PER_BUNDLE = 2000;
+	private final static Long WAIT_BETWEEN_BUNDLES_MS = 2000L;
+
+    public static void main(String[] args) throws IOException, InterruptedException, NotEnoughCapacityException {
 
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 
-		List<String> frases = getFrases();
+		Map<String, String> properties = getProperties();
+		List<PropertyBundle> bundles = generateBundles(properties, CHARACTER_LIMIT_PER_BUNDLE);
+		
+		long expectedWaitTimeSeconds = bundles.size() * WAIT_BETWEEN_BUNDLES_MS / 1000L;
+		System.out.println("Traduciendo, por favor espere al menos " + expectedWaitTimeSeconds + " segundos...");
+		List<PropertyBundle> translatedBundles = sendBundles(bundles);
+		Map<String, String> translatedProperties = combineBundles(translatedBundles);
 
-		for (String frase : frases) {
-
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Accept", "application/json");
-			headers.set("Origin", "https://www.euskadi.eus");
-
-			TraductorRequest request = new TraductorRequest();
-			request.setMkey("8d9016025eb0a44215c7f69c2e10861d");
-			request.setModel("generic_es2eu");
-			request.setText(frase);
-
-			HttpEntity<TraductorRequest> entity = new HttpEntity<>(request, headers);
-
-			ResponseEntity<TraductorResponse> response = new RestTemplate().exchange("https://api.euskadi.eus/itzuli/es2eu/translate",
-					HttpMethod.POST, entity, TraductorResponse.class);
-
-			System.out.println(frase + " - " + response.getBody().getMessage());
+		for(String property : properties.keySet()) {
+			System.out.println(properties.get(property) + " - " + translatedProperties.get(property));
 		}
+
+		System.out.println();
         
     }
+
+	private static Map<String, String> getProperties() throws IOException {
+		Properties properties = new Properties();
+		ClassLoader loader = Thread.currentThread().getContextClassLoader();           
+		InputStream stream = loader.getResourceAsStream(PROPERTIES_RESOURCE_PATH);
+		properties.load(new InputStreamReader(stream, Charset.forName("UTF-8")));
+
+		Map<String, String> ret = new HashMap<>();
+		for(String key : properties.stringPropertyNames()) {
+			ret.put(key, properties.getProperty(key));
+		}
+		return ret;
+	}
+
+	private static List<PropertyBundle> generateBundles(Map<String, String> properties, int characterLimit) throws NotEnoughCapacityException {
+		List<PropertyBundle> ret = new ArrayList<>();
+		PropertyBundle currentBundle = new PropertyBundle(characterLimit);
+		for(Entry<String, String> property : properties.entrySet()) {
+			boolean attempt = currentBundle.tryAddProperty(property.getKey(), property.getValue());
+			if(!attempt) { // currentBundle está lleno. Guardar y empezar a llenar el siguiente.
+				ret.add(currentBundle);
+				currentBundle = new PropertyBundle(characterLimit);
+				attempt = currentBundle.tryAddProperty(property.getKey(), property.getValue());
+				if(!attempt) { // Si property ni siquiera cabe en bundle vacío, no se puede guardar.
+					throw new NotEnoughCapacityException(characterLimit, property.getValue());
+				}
+			}
+		}
+		ret.add(currentBundle); // El último bundle probablemente no se habrá llenado del todo, lo guardamos igual.
+		return ret;
+	}
+
+	private static List<PropertyBundle> sendBundles(List<PropertyBundle> sourceBundles) throws InterruptedException {
+		List<PropertyBundle> ret = new ArrayList<>();
+		for(PropertyBundle bundle : sourceBundles) {
+			String translatedText = sendToTranslate(bundle.getRawText());
+			PropertyBundle translatedBundle = PropertyBundle.fromReplacing(bundle, translatedText);
+			ret.add(translatedBundle);
+			Thread.sleep(WAIT_BETWEEN_BUNDLES_MS);
+		}
+		return ret;
+	}
+
+	private static String sendToTranslate(String content) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", "application/json");
+		headers.set("Origin", "https://www.euskadi.eus");
+
+		TraductorRequest request = new TraductorRequest();
+		request.setMkey("8d9016025eb0a44215c7f69c2e10861d");
+		request.setModel("generic_es2eu");
+		request.setText(content);
+
+		HttpEntity<TraductorRequest> entity = new HttpEntity<>(request, headers);
+
+		ResponseEntity<TraductorResponse> response = new RestTemplate().exchange("https://api.euskadi.eus/itzuli/es2eu/translate",
+				HttpMethod.POST, entity, TraductorResponse.class);
+
+		return response.getBody().getMessage();
+	}
+
+	private static Map<String, String> combineBundles(List<PropertyBundle> bundles) {
+		Map<String, String> properties = new HashMap<>();
+		for(PropertyBundle bundle : bundles) {
+			bundle.getAllProperties().forEach(properties::put);
+		}
+		return properties;
+	}
 
     private static List<String> getFrases() {
 		return Arrays.asList("contra techo perro el jardín brilla en", "techo en contra corre jardín Un la",

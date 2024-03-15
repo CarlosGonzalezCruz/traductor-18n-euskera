@@ -11,7 +11,6 @@ public class TraductorRequest {
 	 */
 	public TraductorRequest() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

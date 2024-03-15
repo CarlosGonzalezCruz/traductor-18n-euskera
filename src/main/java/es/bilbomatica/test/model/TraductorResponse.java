@@ -19,7 +19,6 @@ public class TraductorResponse {
 	 */
 	public TraductorResponse() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
