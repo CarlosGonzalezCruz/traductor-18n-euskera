@@ -1,0 +1,395 @@
+{
+	"ae18bWebAppWar_migas": {
+		
+	},
+	"comun": {
+		"nombreCompleto": "Nombre completo",
+		"email": "Email",
+		"nif": "NIF",
+		"telefono": "Teléfono",
+		"fechaAlta": "Fecha de alta",
+		"estado": "Estado",
+		"si": "Sí",
+		"no": "No",
+		"cargaExcel": "Carga excel"
+	},
+	"rup_validate": {
+		"messages": {
+			"importeNoValido": "Importe no válido. Se permite introducir 9 enteros y 2 decimales",
+			"porcentajeNoValido": "Porcentaje no válido. Se permite introducir 3 enteros y 2 decimales (entre 0 y 100)",
+			"formatoDocumento": "El formato del documento no es válido",
+			"documentoNoPermitido": "Documento no permitido",
+			"coordenadaNoValida": "Coordenada no válida. Se permite introducir 12 enteros y 3 decimales",
+			"m2NoValido": "Metros cuadrados no válidos. Se permite introducir 7 enteros y 2 decimales",
+			"cuentaBancaria": "El número de cuenta introducido no es correcto.",
+			"alamcenamiento": "Es necesario indicar el el almacenamiento",
+			"tipoAlmacenamiento": "Es necesario indicar el tipo de almacenamiento",
+			"m2autorizacion": "Es necesario indicar los metros cuadrados."
+		}
+	},
+	"rup_combo": {
+		"blank": "[Seleccione un elemento]"
+	},
+	"mensajes": {
+		"title": {
+			"confirmacion": "Confirmación",
+			"seleccion": "Selección",
+			"excel": "Excel",
+			"cambios": "Cambios",
+			"Alerta": "Alerta"
+		},
+		"general": {
+			"eliminarConfirmacionTitle": "Eliminar",
+			"guardarOk": "El registro se ha guardado con éxito",
+			"guardarError": "Se ha producido un error al guardar el registro",
+			"bajaPregunta": "Va a dar de baja el registro, ¿desea continuar?",
+			"bajaOk": "El registro se ha dado de baja con éxito",
+			"bajaError": "Se ha producido un error al dar el registro de baja",
+			"eliminarPregunta": "Va a eliminar el registro, ¿desea continuar?",
+			"eliminarOk": "El registro se ha eliminado con éxito",
+			"eliminarError": "Se ha producido un error al eliminar el registro",
+			"reactivarPregunta": "Va a reactivar el registro, ¿desea continuar?",
+			"reactivarOk": "El registro se ha reactivado con éxito",
+			"reactivarError": "Se ha producido un error al reactivar el registro",
+			"descargar": "Descargar",
+			"papel": "Papel",
+			"operacionExito": "La operación se ha realizado con éxito",
+			"operacionError": "Se ha producido un error al realizar la operación",
+			"actualizarError": "Se ha producido un error al actualizar los datos",
+			"borrarRegistrosPregunta": "Se borrará(n) {0} registro(s), ¿desea continuar?",
+			"borrarTodosRegistros": "Se borrarán todos los registros, ¿desea continuar?",
+			"errorSubida": "Se ha producido un error al realizar la subida",
+			"generandoExcel": "Generando Excel",
+			"resumenCarga": "Carga finalizada<br>Número de registros: {0}<br>Número de errores: {1}",
+			"documentoSolicitud": "Se debe aportar al menos un documento de tipo Solicitud",
+			"aportarOk": "La aportación se ha realizado con éxito",
+			"aportarError": "Se ha producido un error al realizar la aportación",
+			"notificarOk": "La notificación se ha realizado con éxito",
+			"notificarError": "Se ha producido un error al realizar la notificación",
+			"generarFactura": "Generando factura, espere por favor"
+		}
+	},
+	"botones": {
+		"editar": "Editar",
+		"baja": "Baja",
+		"eliminar": "Eliminar",
+		"reactivar": "Reactivar",
+		"acciones": "Acciones",
+		"descargar": "Descargar",
+		"detalle": "Detalle"
+	},
+	"conceptos": {
+		"emision": "Emisión",
+		"cobro": "Cobro",
+		"tasa": "Tasa",
+		"iva": "IVA",
+		"exentoIva": "Exento IVA"
+	},
+	"sexo": {
+		"hombre": "Hombre",
+		"mujer": "Mujer"
+	},
+	"direccion": {
+		"direccion": "Dirección",
+		"provincia": "Provincia",
+		"municipio": "Municipio",
+		"localidad": "Localidad",
+		"confirmarNuevaPrincipal": "Esta será la nueva dirección principal, ¿Desea continuar?"
+	},
+	"modal": {
+		"provinciaMunicipio": "Seleccione provincia/municipio"
+	},
+	"tipoDocumento": {
+		"dni": "DNI",
+		"nif": "NIF",
+		"cif": "CIF",
+		"nie": "NIE",
+		"pasaporte": "Pasaporte",
+		"otros": "Otros",
+		"ni": "N/I"
+	},
+	"idioma": {
+		"castellano": "Castellano",
+		"euskera": "Euskera",
+		"bilingue": "Bilingue",
+		"otro": "Otro"
+	},
+	"categoriaTitular": {
+		"armador": "Armador",
+		"consignatario": "Consignatario",
+		"representante": "Represenante"
+	},
+	"naturalezaDocumento": {
+		"papel": "Papel",
+		"electronico": "Electronico",
+		"digitalizado": "Digitalizado",
+		"digitalizadoCopiaAutentica": "Digitalizado copia autentica",
+		"digitalizadoCompulsado": "Digitalizado compulsado"
+	},
+	"usuarios": {
+		"anadirPuerto": "Añadir puerto",
+		"editarPuerto": "Editar puerto",
+		"anadirProcedimiento": "Añadir procedimiento",
+		"editarProcedimiento": "Editar procedimiento",
+		"infoConsultar": "Habilitando esté perfil se deshabiltaran el resto de perfiles"
+	},
+	"expedientes": {
+		"acciones": {
+			"detalleExpediente": "Detalle expediente",
+			"aportacion": "Aportación de documentos",
+			"aportarDocumentoCiudadano": "Aportación documentos del ciudadano",
+			"aportarDocumento": "Aportación genérica de documentos",
+			"aportarResolucion": "Aportación de resolución",
+			"ejecutar": "Ejecutar",
+			"tramitar": "Tramitar",
+			"notificarDocumento": "Notificación genérica de documentos",
+			"notificarResolucion": "Notificación de resolución",
+			"notificar": "Notificación de documentos",
+			"cerrar": "Cerrar expediente",
+			"anularCierre": "Reabrir expediente",
+			"cerrarPregunta": "Va a cerrar el expediente, ¿Desea continuar?",
+			"anularCerrarPregunta": "Se va a proceder a reabrir el expediente. ¿Desea continuar?",
+			"verFacturas": "Ver facturas"
+		},
+		"comboMostrar": {
+			"sinAbrir": "Sin abrir",
+			"tramitacion": "En tramitación",
+			"cerrado": "Cerrado"
+		},
+		"resolucion": {
+			"desfavorable": "Desfavorable",
+			"favorable": "Favorable",
+			"generarResolucion": "Generar resolución"
+		},
+		"expedienteAbierto": "Expediente abierto",
+		"generacionFactura": {
+			"expedientesCerrados": "No se pueden tramitar expedientes en estado de cierre",
+			"mismoProcedimiento": "Los expedientes deben de ser todos del mismo procedimiento",
+			"avisoNoGenerarFacturas": "No se ha generado la factura para los siguientes expedientes :<br>",
+			"avisoGenerarFacturas": "Se ha generado la factura para los siguientes expedientes :<br>",
+			"datosObligatorios": "Por favor, rellene todos los campos obligatorios"
+		}
+	},
+	"interesados": {
+		"interesado": "Interesado",
+		"interesadosTitular": "TITULAR",
+		"interesadosTitularNumero": "1",
+		"interesadosRepresentante": "REPRESENTANTE",
+		"interesadosRepresentanteNumero": "2",
+		"interesadosOtros": "OTROS",
+		"interesadosAfectado": "AFECTADO",
+		"interesadosOtrosNumero": "3"
+	},
+	"adjuntos": {
+		"estadosNotificacion": {
+			"notificacionEstadoSinEnviar": "SIN ENVIAR",
+			"notificacionEstadoEnviada": "ENVIADA",
+			"notificacionEstadoExpirada": "EXPIRADA",
+			"notificacionEstadoAceptada": "ACEPTADA"
+		}
+	},
+	"notificaciones": {
+		"documentos": "Documentos",
+		"noDocumentos": "No hay documentos",
+		"notificacionNoPosibleFirma": "No es posible realizar la notificación ya que todos los documentos seleccionados están pendientes de firma",
+		"documentosPendientesFirma": "<p>Los siguientes documentos están pendientes de firma:</p><p>{0}</p><p>Puede realizar la notificación con el resto de documentos seleccionados. ¿Desea realizar la notificación?</p>",
+		"documentoResolucion": "Se va a proceder a notificar la resolución: "
+	},
+	"documentos": {
+		"anyadirDocumento": "Añadir documento"
+	},
+	"msgProcessing": {
+		"comprobandoSolicitud": "Comprobando la solicitud",
+		"enviandoSolicitud": "Enviando solicitud"
+	},
+	"buttons": {
+		"close": "Cerrar"
+	},
+	"tipoInteresado": {
+		"titular": "Titular",
+		"representante": "Representante"
+	},
+	"notificacion": {
+		"tipoNotificacion": {
+			"telematica": "Telemática",
+			"postal": "Postal"
+		},
+		"idioma": {
+			"euskera": "Euskera",
+			"castellano": "Castellano"
+		},
+		"nota": "La notificación telemática requiere de certificado electrónico válido para recogerla"
+	},
+	"solicitud": {
+		"titleresumen": "Resumen solicitud"
+	},
+	"inicioOficio": {
+		"titleresumen": "Resumen inicio oficio"
+	},
+	"procedimiento": {
+		"procedimiento0102002": "(0102002) Autorizaciones portuarias",
+		"procedimiento0102102": "(0102102) Concesiones portuarias",
+		"procedimiento0102003": "(0102003) Autorizaciones de ocupación portuarias",
+		"procedimiento0102002_corto": "A1",
+		"procedimiento0102102_corto": "C1",
+		"procedimiento0102003_corto": "O1"
+	},
+	"expedienteAutorizacion": {
+		"deposito": {
+			"importeDepositoTitulo": "Importe deposito",
+			"importeDepositoError": "Debe introducir el importe del depósito",
+			"avisoFechaLimitePago": "La fecha limite de pago para la liquidación va a ser {0}, ¿Desea continuar?",
+			"numeroTerceroNoValido": "El número de tercero no es valido",
+			"importeIncautarError": "Debe introducir el importe a incautar",
+			"importeIncautarMenor": "El importe a incautar debe ser menor que el importe del depósito",
+			"numeroTercero": "Debe introducir un tercero",
+			"titleModalTercero": "Selección tercero"
+		},
+		"mensajes": {
+			"fechas": {
+				"fechaDesdeFechaHasta": "El rango de fechas no es correcto"
+			},
+			"tasa": "Es necesario completar la tasa del año actual."
+		}
+	},
+	"expedienteConcesion": {
+		"mensajes": {
+			"fechas": {
+				"fechaDesdeFechaHasta": "El rango de fechas no es correcto"
+			},
+			"tasa": "Es necesario completar la tasa del puerto.",
+			"descuentosError": "Se ha producido un error al cargar los Descuentos."
+		}
+	},
+	"expedienteOcupacion": {
+		"deposito": {
+			"importeDepositoTitulo": "Importe deposito",
+			"importeDepositoError": "Debe introducir el importe del depósito"
+		},
+		"mensajes": {
+			"fechas": {
+				"fechaDesdeFechaHasta": "El rango de fechas no es correcto"
+			},
+			"tasa": "Es necesario completar la tasa del año actual."
+		}
+	},
+	"incidencia": {
+		"nuevaIncidencia": "Añadir incidencia",
+		"mensaje": {
+			"validacionDatos": "Es obligatorio indicar el Número, Incidencia Castellano e Incidencia Euskera"
+		}
+	},
+	"generarFactura": {
+		"tituloGenerarFactura": "Generar factura",
+		"mensajes": {
+			"validacionDatos": "Es obligatorio indicar la fecha de emisión.",
+			"facturacionPeriodo": "Se recuerda que el periodo de facturación (LIQUIDACION) comprende del 1 a 25 del mes.<br> Sólo de forma excepcional se puede facturar a partir del día 25 del mes.<br>  ¿Está seguro que desea continuar?"
+		}
+	},
+	"facturaInspeccion": {
+		"tituloFacturaInspeccion": "Factura inspección",
+		"mensajes": {
+			"validacionDatosFechaEmision": "Es obligatorio indicar la fecha de emisión.",
+			"validacionDatosM2Inspeccion": "La superficie tras la inspección no puede ser inferior a la anterior.",
+			"facturacionPeriodo": "Se recuerda que el periodo de facturación (LIQUIDACION) comprende del 1 a 25 del mes.<br> Sólo de forma excepcional se puede facturar a partir del día 25 del mes.<br>  ¿Está seguro que desea continuar?"
+		}
+	},
+	"tipoPresentacion": {
+		"telematica": "Telemática",
+		"presencial": "Presencial"
+	},
+	"eika": {
+		"mensajes": {
+			"borrarNumeroTercero": "Al buscar el número de tercero en EIKA se sobreescribira el actual, ¿Desea continuar?",
+			"terceroNoEncontrado": "No se ha encontrado un tercero en EIKA"
+		}
+	},
+	"liquidacion": {
+		"noReimpresion": "No se puede reimprimir si no esta emitida o en estado pendiente de pago",
+		"noReimpresionTelematica": "No se pueden imprimir liquidaciones de expedientes con canal de notificación telemático",
+		"noIdPago": "No tenemos el identificador del pago",
+		"domiciliacion": {
+			"noRectificativa": "Opción no posible para facturas rectificativas",
+			"noEstadoOperacion": "Esta acción no puede realizarse debido al estado de la liquidación",
+			"yaDomiciliada": "La factura ya esta domiciliada.¿Desea generar de nuevo el csb19?",
+			"yaDomiciliadas": "Alguna de las facturas ya están domiciliadas, se generará de nuevo el CSB19",
+			"NoNumCuenta": "El titular de alguna de las facturas seleccionadas no tiene número de cuenta, por lo tanto no se va a poder domiciliar",
+			"estadoDomiciliacionNoCorrectoUnica": "No se pueden domiciliar la factura, ya que su estado no es correcto",
+			"estadoDomiciliacionNoCorrecto": "No se pueden domiciliar las siguientes facturas, ya que su estado no es correcto",
+			"trLiqNoRealizar": "Alguna de las facturas seleccionadas han sido dadas de baja o han sido emitidas o están en proceso de anulación",
+			"estadoDomiciliacionAnulacion": "No se puedes domiciliar las siguientes facturas, ya que su estado esta pendiente de anulacion",
+			"estadoDomiciliacionAnulacionUnica": "No se puedes domiciliar la factura, ya que su estado esta pendiente de anulacion"
+		},
+		"envioApremio": {
+			"noViaApremio": "No se puede pasar a vía de apremio una factura pagada, o en proceso de vía de apremio, o de la que no se ha emitido liquidación, o que no tenga informados en el detalle los datos de fecha de notificación y tipo de notificación",
+			"noResidente": "El solicitante no es residente, comprobar el representante",
+			"esPosterior": "La fecha limite de pago es igual o posterior a la actual, no se puede enviar a apremio",
+			"pasoViaApremio": "La factura pasará a via de apremio ¿Está seguro?"
+		},
+		"anulacionViaApremio": {
+			"noAnulacionViaApremio": "La factura no se encuentra en via de apremio",
+			"anulacionViaApremio": "Se va a anular la liquidación que está en vía de apremio, ¿Está seguro?"
+		}
+	},
+	"actosAdministrativos": {
+		"requerimiento": "Requerimiento",
+		"rSubsanacion": "Requerimiento de subsanación",
+		"reqAmpliacionInf": "Requerimiento de ampliación de información",
+		"resolucion": "Resolución",
+		"resolucionRecurso": "Resolución del recurso",
+		"soldocadjint": "Solicitud de documentación a la parte adjudicataria/interesada",
+		"otros": "Otros"
+	},
+	"facturas": {
+		"acciones": {
+			"detalleFactura": "Detalle factura",
+			"reimprimirliquidacion": "Reimprimir liquidación",
+			"domiciliarFactura": "Domiciliar factura",
+			"facturaRectificativa": "Factura rectificativa",
+			"enviarAViaApremio": "Enviar a vía de apremio",
+			"anulacionViaApremio": "Anular via apremio"
+		},
+		"tituloInfoEstadosLq": "Estados liquidación",
+		"importeSipcaNota": "(Importe total pagado informado por SIPCA)",
+		"rectificativa": {
+			"titulo": "Generar factura rectificativa",
+			"facturacionPeriodo": "Se recuerda que el periodo de facturación (RECTIFICATIVA) comprende del 1 a 20 del mes.<br> Sólo de forma excepcional se puede facturar a partir del día 20 del mes.<br> ¿Está seguro que desea continuar?",
+			"estadoNoRectificativa": "Para este estado de liquidación no se permite generar facturas rectificativas",
+			"tipoRectificativa": "Seleccione el tipo de rectificativa que va a realizar positiva o negativa",
+			"importeOblig": "El importe es obligatorio",
+			"obligatorioMotivoAnulacion": "Debe introducir el motivo de la anulación",
+			"tipoIva": "No se ha podido obtener el tipo de iva.",
+			"numTerceroObligatorio": "Para hacer una devolucion el código de tercero de EIKA es obligatorio. Introdúzcalo desde el mantenimiento de solicitantes."
+		}
+	},
+	"aplicacionPresupuestaria": {
+		"mensaje": {
+			"seleccionarConcepto": "Debe seleccionar un concepto tasa o un concepto exento"
+		}
+	},
+	"plazo": {
+		"dias": "Dias",
+		"meses": "Meses",
+		"anyos": "Años"
+	},
+	"listados": {
+		"autorizacion": {
+			"expediente": "Expediente",
+			"solicitante": "Solicitante"
+		},
+		"ordenacion": {
+			"numFactura": "Número de factura",
+			"expediente": "Expediente",
+			"estado": "Estado"
+		}
+	},
+	"gpm": {
+		"mensaje": "Mensajes",
+		"solicitud": "Solicitud",
+		"respuesta": "Respuesta",
+		"apertura": "Apertura",
+		"cierre": "Cierre",
+		"solictudProcesada": "Su solicitud asíncrona se ha procesado con éxito. Por favor, actualice la tabla de solicitudes en unos minutos",
+		"confirmTareasEsperas": "Para realizar la operación es necesario que los expedientes de todos los procedimientos estén abiertos, ¿Desea continuar?"
+	}
+}

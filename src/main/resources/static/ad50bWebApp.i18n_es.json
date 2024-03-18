@@ -1,0 +1,560 @@
+{
+	"comun": {
+		"nombreCompleto": "Nombre completo",
+		"email": "Email",
+		"nif": "NIF",
+		"telefono": "Teléfono",
+		"fechaAlta": "Fecha de alta",
+		"estado": "Estado",
+		"si": "Sí",
+		"no": "No"
+	},
+	"ad50bWebAppWar_migas": {
+		
+	},
+	"rup_validate": {
+		"messages": {
+			"importeNoValido": "Importe no válido. Se permite introducir 9 enteros y 2 decimales",
+			"porcentajeNoValido": "Porcentaje no válido. Se permite introducir 3 enteros y 2 decimales (entre 0 y 100)",
+			"formatoDocumento": "El formato del documento no es válido",
+			"documentoNoPermitido": "Documento no permitido",
+			"coordenadaNoValida": "Coordenada no válida. Se permite introducir 12 enteros y 3 decimales",
+			"m2NoValido": "Metros cuadrados no válidos. Se permite introducir 4 enteros y 2 decimales"
+		}
+	},
+	"rup_combo": {
+		"blank": "[Seleccione un elemento]"
+	},
+	"tooltip": {
+		"metadonaAvisoAcreditacion": "Ha pasado más de un año y 9 meses desde la fecha de acreditación de metadona"
+	},
+	"mensajes": {
+		"title": {
+			"confirmacion": "Confirmación",
+			"seleccion": "Selección",
+			"excel": "Excel",
+			"cambios": "Cambios",
+			"completarDatosSolicitud": "Completar datos de solicitud"
+		},
+		"general": {
+			"eliminarConfirmacionTitle": "Eliminar",
+			"guardarOk": "El registro se ha guardado con éxito",
+			"guardarError": "Se ha producido un error al guardar el registro",
+			"bajaPregunta": "Va a dar de baja el registro, ¿desea continuar?",
+			"bajaOk": "El registro se ha dado de baja con éxito",
+			"bajaError": "Ha habido un error al dar el registro de baja",
+			"eliminarOk": "El registro se ha eliminado con éxito",
+			"eliminarError": "Ha habido un error al eliminar el registro",
+			"reactivarPregunta": "Va a reactivar el registro, ¿desea continuar?",
+			"reactivarOk": "El registro se ha reactivado con éxito",
+			"reactivarError": "Ha habido un error al reactivar el registro",
+			"superficieError": "Ha habido un error al calcular la superficie útil",
+			"profesionalesActivosError": "Ha habido un error al calcular los profesionales activos",
+			"adjuntosActivosError": "Ha habido un error al calcular los adjuntos activos",
+			"descargar": "Descargar",
+			"operacionExito": "La operación se ha realizado con éxito",
+			"notificarOk": "La notificación se ha realizado con éxito",
+			"notificarError": "Ha habido un error al realizar la notificación",
+			"aportarOk": "La aportación se ha realizado con éxito",
+			"aportarError": "Ha habido un error al realizar la aportación",
+			"errorCodigoPostal": "Se ha producido un error al cargar los datos",
+			"actualizarError": "Ha habido un error al actualizar los datos",
+			"resumenCarga": "Carga finalizada<br>Número de registros: {0}<br>Número de errores: {1}",
+			"borrarRegistrosPregunta": "Se borrará(n) {0} registro(s), ¿desea continuar?",
+			"borrarTodosRegistros": "Se borrarán todos los registros, ¿desea continuar?",
+			"comprobarCumpleAdjDefinitivosError": "Error en la comprobación de ajuntos definitivos",
+			"confirmacionResolucionFavorable": "Se va a generar un documento de resolución favorable y enviarlo a firma al director de farmacia ({0}). Una vez firmado se aportará al expediente",
+			"confirmacionResolucionDesfavorable": "Se va a generar un documento de resolución desfavorable y enviarlo a firma al director de farmacia ({0}). Una vez firmado se aportará al expediente",
+			"confirmacionNotificacion": "Va a proceder a notificar la resolución, ¿desea continuar?",
+			"notificarValidacion": "No existe resolución a notificar",
+			"confirmacionComunicacionRegcess": "Se realizará la comunicación con REGCESS, ¿desea continuar?",
+			"comunicacionRegcessOk": "La comunicación se ha realizado con éxito",
+			"comunicacionRegcessError": "Ha habido un error al realizar la comunicación",
+			"comunicacionRegcessErrorCodigo": "Ha habido un error al realizar la comunicación. Error:",
+			"errorSubida": "Ha habido un error al realizar la subida",
+			"censoYaActualizado": "El censo ya ha sido actualizado con los datos de este expediente",
+			"generandoExcel": "Generando Excel",
+			"confirmacionGenerarInformeNivel": "Se va a generar un informe de asignación de nivel y se va a informar a firmar al director de farmacia ({0}). Una vez firmado se aportará al expediente",
+			"generacionInformeOk": "El informe se ha generado con éxito",
+			"generacionInformeError": "Ha habido un error al generar el informe",
+			"interesadosCambioCIF": "Si modifca o intruduce un nuevo CIF para un cotitular se modificarán el resto de cotitulares, ¿Desea continuar?"
+		}
+	},
+	"botones": {
+		"editar": "Editar",
+		"baja": "Baja",
+		"eliminar": "Eliminar",
+		"reactivar": "Reactivar",
+		"verExpediente": "Ver expediente",
+		"verZonasAccesos": "Mostrar zonas/accesos",
+		"acciones": "Acciones",
+		"descargar": "Descargar"
+	},
+	"bandejaControlExpedientes": {
+		"acciones": {
+			"detalleExpediente": "Detalle Expediente",
+			"verFarmacia": "Ver Farmacia",
+			"aportarDocumento": "Aportación genérica de documentos",
+			"ejecutar": "Ejecutar",
+			"tramitar": "Tramitar",
+			"notificarDocumento": "Notificación genérica de documentos"
+		},
+		"comboMostrar": {
+			"sinAbrir": "Sin abrir",
+			"tramitacion": "En Tramitación",
+			"cerrado": "Cerrado"
+		},
+		"resolucion": {
+			"desfavorable": "Desfavorable",
+			"favorable": "Favorable",
+			"generarResolucion": "Generar resolución"
+		}
+	},
+	"censoFarmaceutico": {
+		"regente": "Regente:",
+		"razon": "Razón:",
+		"sinRazon": "Sin razón",
+		"noCumpleAdjDefinitivos": "No cumple adjuntos obligatorios",
+		"menosDe3AnyosUltimaTransmision": "Es necesario que pasen 3 años desde la útima transmisión para realizar una nueva",
+		"ultimaTransmisionFue": "La última transmisión fue el {0}",
+		"comboMostrar": {
+			"todos": "Todos",
+			"todosValor": "0",
+			"soloActivos": "Solo activos",
+			"soloActivosValor": "1",
+			"soloBaja": "Solo dados de baja",
+			"soloBajaValor": "2"
+		},
+		"nuevaFarmacia": "Nueva farmacia",
+		"localizacion": {
+			"existeLocalizacionActiva": "Solo puede existir una localización activa"
+		}
+	},
+	"modal": {
+		"title": "Titulo",
+		"recetas": "Volumen actividad",
+		"secciones": "Secciones",
+		"cierres": "Cierres",
+		"titleExpediente": "Detalle Expediente",
+		"accesosCruces": "Accesos cruces",
+		"localizacion": "Localización",
+		"titulares": "Titulares",
+		"designaciones": "Designaciones",
+		"suplencias": "Suplencias",
+		"provinciaMunicipio": "Seleccione Provincia/Municipio"
+	},
+	"estadosExpedientes": {
+		"expedienteEstadoSinAbrir": "SIN ABRIR",
+		"expedienteEstadoEnTramitacion": "EN TRAMITACIÓN",
+		"expedienteEstadoCerrado": "CERRADO"
+	},
+	"estadosFarmacia": {
+		"estadosFarmaciaActivo": "ACTIVO",
+		"estadosFarmaciaActivoNumero": "0",
+		"estadosFarmaciaBaja": "BAJA",
+		"expedienteEstadoBajaNumero": "1"
+	},
+	"interesados": {
+		"interesado": "Interesado",
+		"interesadosTitular": "TITULAR",
+		"interesadosTitularNumero": "1",
+		"interesadosRepresentante": "REPRESENTANTE",
+		"interesadosRepresentanteNumero": "2",
+		"interesadosOtros": "OTROS",
+		"interesadosOtrosNumero": "3"
+	},
+	"secciones": {
+		"ortopedia": "Ortopedia",
+		"optica": "Óptica",
+		"analisis": "Análisis clínicos"
+	},
+	"mediosHumanos": {
+		"titular": "Titular",
+		"tipo": {
+			"titular": "Titular",
+			"cotitular": "Cotitular",
+			"regente": "Regente"
+		},
+		"tipoDesignacion": {
+			"adjunto": "Adjunto",
+			"sustituto": "Sustituto",
+			"regente": "Regente",
+			"suplente": "Suplente"
+		},
+		"tipoDocumento": {
+			"nif": "NIF",
+			"cif": "CIF",
+			"nie": "NIE",
+			"pasaporte": "Pasaporte",
+			"otros": "Otros",
+			"ni": "N/I"
+		},
+		"tipoPersona": {
+			"titular": "Titular o cotitular",
+			"otroFarmaceutico": "Otro farmacéutico con titulación específica",
+			"otroProfesional": "Otro profesional con titulación específica"
+		},
+		"designaciones": {
+			"ctp": "El CTP no puede superar 1000"
+		}
+	},
+	"jornada": {
+		"manana": "Mañana",
+		"mananaNumero": "0",
+		"tarde": "Tarde",
+		"tardeNumero": "1",
+		"completa": "Completa",
+		"completaNumero": "2"
+	},
+	"jornadaDesignaciones": {
+		"completa": "Completa",
+		"completaNumero": "0",
+		"parcial": "Parcial",
+		"parcialNumero": "1",
+		"especial": "Especial",
+		"especialNumero": "2"
+	},
+	"suplencias": {
+		"causas": {
+			"vacaciones": "Vacaciones",
+			"enfermedad": "Enfermedad",
+			"asuntosPropios": "Asuntos propios",
+			"licenciasPermisos": "Licencias o permisos"
+		}
+	},
+	"plazos": {
+		"dias": "dia(s)",
+		"semanas": "semana(s)",
+		"meses": "mes(es)",
+		"anyos": "año(s)"
+	},
+	"duracionCierre": {
+		"obras": "Obras",
+		"periodoVacaciones": "Periodo Vacacional"
+	},
+	"botiquin": {
+		"botiquin": "Botiquín"
+	},
+	"usuarios": {
+		"perfil": {
+			"director": "Director",
+			"administrativo": "Administrativo",
+			"inspector": "Inspector"
+		},
+		"idioma": {
+			"espaniol": "Español",
+			"espaniolValor": "es",
+			"euskera": "Euskera",
+			"euskeraValor": "eu",
+			"bilingue": "Bilingue",
+			"bilingueValor": "bi",
+			"otro": "Otro",
+			"otroValor": "otro"
+		},
+		"hayDirector": "Ya existe un director activo en el sistema"
+	},
+	"tipoComunicacion": {
+		"comunicacionObrasNoSustanciales": "Comunicación de obras no sustanciales",
+		"comunicacionCeseSeccion": "Comunicación de cese de sección",
+		"comunicacionNoDesignacionRegente": "Comunicación de no designación de regente",
+		"comunicacionSuplenciaAusenciaTitular": "Comunicación de Suplencia por ausencia del titular o cotitulares",
+		"comunicacionInicioActividad": "Comunicación de inicio de actividad de adjunto, sustituto o regente",
+		"comunicacionFinalActividad": "Comunicación de finalización de actividad de adjunto, sustituto o regente",
+		"comunicacionFechaApertura": "Comunicación de fecha apertura",
+		"comunicacionFechaCierreTemporal": "Comunicación de fecha de cierre temporal"
+	},
+	"horarios": {
+		"documentoVacio": "El documento adjunto está vacio",
+		"adjuntarObligatorio": "El documento debe ser adjuntado antes de guardar",
+		"anyoError": "El año es incorrecto",
+		"adjuntarHorario": "Error al adjuntar el documento",
+		"zonasSinHorario": "Zonas sin ningún horario asignado",
+		"editarDocumento": "Editar documento",
+		"anyadirDocumento": "Añadir documento",
+		"confirmacionEliminarDocumento": "¿Desea eliminar el documento?",
+		"eliminarDocumentoExito": "Documento eliminado con éxito",
+		"eliminarDocumentoError": "Ha habido un error al eliminar el documento"
+	},
+	"adjuntos": {
+		"listaVacia": "Debe seleccionar algún registro para realizar la operación.",
+		"calcularAdjuntosPrevistosError": "Error al calcular adjuntos previstos.",
+		"calcularAdjuntosPrevistosAviso": "Se procede a calcular los adjuntos previstos sobre los elementos seleccionados.",
+		"calcularAdjuntosPrevistosTodosAviso": "Se procede a calcular los adjuntos previstos sobre los elementos que cumplen con los criterios de búsqueda seleccionados. Dicho cálculo se realizará en el proceso nocturno, los resultados estarán disponibles mañana.",
+		"iniciarExpedientesOficioError": "Error al iniciar expedientes oficio.",
+		"iniciarExpedientesOficioAviso": "Se procede a iniciar expedientes de oficio sobre los elementos seleccionados.",
+		"iniciarExpedientesOficioTodosAviso": "Se procede a iniciar expedientes de oficio sobre los elementos que cumplen con los criterios de búsqueda seleccionados. La apertura se realizará en un proceso nocturno, los expedientes estarán disponibles mañana.",
+		"notificarAdjuntosError": "Error al notificar adjuntos.",
+		"notificarAdjuntosAviso": "Se procede a notificar adjuntos sobre los elementos seleccionados.",
+		"notificarAdjuntosTodosAviso": "Se procede a notificar adjuntos sobre los elementos que cumplen con los criterios de búsqueda seleccionados. La notificación se realizará en un proceso nocturno, las notificaciones estarán disponibles mañana.",
+		"calculoAdjuntosDefinitivosError": "Error al calcular adjuntos definitivos.",
+		"calculoAdjuntosDefinitivosAviso": "Se procede a calcular los adjuntos definitivos sobre los elementos seleccionados.<br>Previamente a lanzar este proceso debe asegurarse de que los datos de las farmacias han sido actualizados con la información aportada por los farmacéuticos.",
+		"calculoAdjuntosDefinitivosTodosAviso": "Se procede a calcular los adjuntos definitivos sobre los elementos que cumplen con los criterios de búsqueda seleccionados.Dicho cálculo se realizará en el proceso nocturno, los resultados estarán disponibles mañana.<br>Previamente a lanzar este proceso debe asegurarse de que los datos de las farmacias han sido actualizados con la información aportada por los farmacéuticos.",
+		"generarResolucionesError": "Error al generar la resolución global",
+		"generarResolucionesAviso": "Se va a generar la resolución global para todas las farmacias y se va a enviar a firmar por el director de Farmacia. ¿Desea continuar?",
+		"generarResolucionesTodosAviso": "Se procede a generar resoluciones aviso. Dicho cálculo se realizará en el proceso nocturno. Los resultados estarán disponibles mañana.",
+		"generarResolucionesExiste": "Ya existe una resolución generada para el año seleccionado. ¿Desea continuar?",
+		"generarResolucionesFirmanda": "Ya existe una resolución generada y firmada para el año seleccionado.",
+		"valoresCalculoPrevistos": "Datos cálculo adjuntos previstos",
+		"valoresCalculoDenitivos": "Datos cálculo adjuntos definitivos",
+		"comboEstados": {
+			"sinIniciar": "Sin iniciar",
+			"sinIniciarNumerico": "0",
+			"notificacionInicial": "Pendiente notificación inicial",
+			"notificacionInicialNumerico": "1",
+			"notificacionResolucion": "Pendiente notificación resolución",
+			"notificacionResolucionNumerico": "2",
+			"resuelto": "Resuelto",
+			"resueltoNumerico": "3"
+		},
+		"estadosNotificacion": {
+			"notificacionEstadoSinEnviar": "SIN ENVIAR",
+			"notificacionEstadoEnviada": "ENVIADA",
+			"notificacionEstadoExpirada": "EXPIRADA",
+			"notificacionEstadoAceptada": "ACEPTADA"
+		}
+	},
+	"exp1057512": {
+		"actualizarDatosCenso": "¿Desea actualizar los datos de adjuntos y auxiliares de la farmacia con los datos presentados en el expediente?"
+	},
+	"exp1057507": {
+		"actualizarDatosCenso": "¿Desea actualizar los datos de la persona que atiende a la sección con los datos presentados en el expediente?"
+	},
+	"exp1057501": {
+		"actualizarDatosCenso": "¿Desea actualizar los datos de la farmacia con los datos presentados en el expediente?",
+		"tipoAutorizacionNoValida": "La autorización de funcionamiento debe ser de sección de ortopedia, óptica o análisis clínicos"
+	},
+	"actosAdministrativos": {
+		"requerimiento": "Requerimiento",
+		"rSubsanacion": "Requerimiento de subsanación",
+		"reqAmpliacionInf": "Requerimiento de ampliación de información",
+		"resolucion": "Resolución",
+		"soldocadjint": "Solicitud de documentación a la parte adjudicataria/interesada",
+		"otros": "Otros"
+	},
+	"exp1057511": {
+		"adjunto": "Adjunto",
+		"regente": "Regente",
+		"sustituto": "Sustituto",
+		"hombre": "Hombre",
+		"mujer": "Mujer",
+		"definido": "Definido",
+		"definidoNumero": "1",
+		"indefinido": "Indefinido",
+		"indefinidoNumero": "0",
+		"actualizarDatosCenso": "¿Desea actualizar los datos de las designaciones de la farmacia con los datos presentados en el expediente?"
+	},
+	"ubicacion": {
+		"provincia": "Provincia",
+		"municipio": "Municipio",
+		"localidad": "Localidad"
+	},
+	"cargaRecetas": {
+		"modal": {
+			"titulo": "Mensaje de error del registro"
+		},
+		"tipoErrorCargaRecetas": {
+			"formatoErroneo": "Formato erróneo de fichero",
+			"farmaciaInexistente": "Farmacia inexistente",
+			"numeroRecetasActivas": "Número de recetas activas erróneo",
+			"numeroRecetasPensionistas": "Número de recetas de pensionistas erróneo",
+			"otros": "Otros"
+		}
+	},
+	"notificaciones": {
+		"documentos": "Documentos",
+		"noDocumentos": "No hay documentos",
+		"notificacionNoPosibleFirma": "No es posible realizar la notificación ya que todos los documentos seleccionados están pendientes de firma",
+		"documentosPendientesFirma": "<p>Los siguientes documentos están pendientes de firma:</p><p>{0}</p><p>Puede realizar la notificación con el resto de documentos seleccionados. ¿Desea realizar la notificación?</p>"
+	},
+	"exp1057517": {
+		"tipoTransmision": {
+			"familiares": "Transmisión a familiares",
+			"terceros": "Transmisión a terceros",
+			"continuidad": "De continuidad"
+		},
+		"motivoTransmision": {
+			"voluntad": "Voluntad del titular/cotitular",
+			"fallecimiento": "Fallecimiento del titular/cotitular",
+			"jubilacion": "Jubilación del titular/cotitular ",
+			"incapacidad": "Incapacidad del titular/cotitular",
+			"declaracion": "Declaración judicial de ausencia del titular/cotitular"
+		},
+		"tipoTitulo": {
+			"oneroso": "Titulo oneroso",
+			"gratuito": "Título gratuito"
+		},
+		"destinatarioTransmision": {
+			"terceros": "Terceros",
+			"familiares": "Familiares",
+			"herederos": "Herederos"
+		},
+		"gradoParentesco": {
+			"hijo": "Hijo/a",
+			"progenitor": "Progenitor",
+			"nieto": "Nieto/a",
+			"conyuge": "Cónyuge"
+		},
+		"sexo": {
+			"hombre": "Hombre",
+			"mujer": "Mujer"
+		},
+		"actualizarDatosCenso": "¿Desea actualizar los datos del titular de la farmacia con los datos presentados en el expediente?"
+	},
+	"exp1057519": {
+		"actualizarDatosCenso": "¿Desea actualizar los datos de cierre con los datos presentados en el expediente?"
+	},
+	"exp1057508": {
+		"actualizarDatosCenso": "¿Desea actualizar los datos de la localización con los datos presentados en el expediente?",
+		"actualizarDatosCensoIntroducidos": "¿Desea actualizar los datos de la localización con los datos introducidos?"
+	},
+	"llamadasRegcess": {
+		"cuerpoLlamada": "Cuerpo de la llamada",
+		"cuerpoRespuestaLlamada": "Cuerpo de la respuesta de la llamada",
+		"mensajesLlamada": "Mensajes de llamada",
+		"comunicacionRegcess": "Comunicación con REGCESS",
+		"errorValidacionFarmacia": "No es posible acceder a la pantalla de llamada REGCESS. Ocurrió un error en la validación de datos de la farmacia",
+		"tipoOperacionRegcess": {
+			"autorizacionFuncionamiento": "Autorización de funcionamiento",
+			"autorizacionCierre": "Autorización de cierre",
+			"autorizacionModificacion": "Autorización de modificación",
+			"modificacionAdministrativa": "Modificación administrativa",
+			"renovacionFuncionamiento": "Renovación de funcionamiento"
+		},
+		"estado": {
+			"pendiente": "Pendiente",
+			"cosolidada": "Consolidada",
+			"erronea": "Errónea"
+		},
+		"estadoTooltip": {
+			"datosConsolidados": "Datos consolidados en REGCESS",
+			"pendienteRespuesta": "Pendiente de respuesta del REGCESS",
+			"error": "El REGCESS ha respondido con un error. Por favor consulte las llamadas al REGCESS para más información"
+		}
+	},
+	"exp1057510": {
+		"actualizarDatosCenso": "¿Desea añadir la cruz a la farmacia?"
+	},
+	"exp1057502": {
+		"dia": "día(s)",
+		"semana": "semana(s)",
+		"mes": "mes(es)",
+		"anyo": "año(s)",
+		"modificacionDe": "Modificación de {0}",
+		"creacionDe": "Creación de {0}",
+		"accesoPublico": "Acceso público",
+		"accesoPrivado": "Acceso privado",
+		"cruz": "Cruz",
+		"direccion": "Dirección",
+		"direccionSolicitud": "Dirección de la solicitud",
+		"direccionActual": "Dirección actual",
+		"fechaBajaSolicitud": "Fecha de baja de la solicitud",
+		"fechaBajaActual": "Fecha de baja actual",
+		"nombre": "Nombre",
+		"nombreEs": "Nombre en castellano",
+		"nombreEu": "Nombre en euskera",
+		"m2": "M2",
+		"m2Solicitud": "M2 de la solicitud",
+		"m2Actuales": "M2 actuales",
+		"nivelFormulas": "Nivel de formulas magistrales",
+		"nivelReformaFormulas": "Nivel tras la reforma de elaboración de fórmulas magistrales",
+		"nivelActualFormulas": "Nivel actual de elaboración de fórmulas magistrales",
+		"actualizarDatosCenso": "¿Desea actualizar los datos de la farmacia con los datos presentados en el expediente?",
+		"debeCompletarDireccion": "Debe completar esta dirección para actualizar los datos de la farmacia",
+		"completarDireccion": "Completar dirección",
+		"modificacionZona": "Modificación de zona",
+		"creacionZona": "Creación de zona",
+		"confirmarCompletarDireccion": "¿Completar la dirección?",
+		"direccionCompletada": "Dirección completada",
+		"avisoDireccionesIncompletas": "Debe completar todas las direcciones de accesos y cruces antes de continuar"
+	},
+	"exp1057506": {
+		"titular": "Titular",
+		"nombre": "Nombre",
+		"cotitular": "Cotitular",
+		"tipoDocumento": "Tipo de documento",
+		"documento": "Documento",
+		"sexo": "Sexo",
+		"porcentajeCotitularidad": "Porcentaje cotitularidad",
+		"confirmarAnadirFarmacia": "¿Desea añadir la farmacia al censo?",
+		"anadirFarmaciaError": "Se ha producido un error al añadir la farmacia"
+	},
+	"comunicacionesLabofar": {
+		"altaFarmacia": "Alta de farmacia",
+		"modificacionFarmacia": "Modificación de farmacia",
+		"bajaFarmacia": "Baja de farmacia",
+		"mensajesComunicacion": "Mensajes de comunicación",
+		"cuerpoComunicacion": "Cuerpo de la comunicación",
+		"cuerpoRespuestaComunicacion": "Cuerpo de la respuesta de la comunicación",
+		"comunicacionLabofar": "Comunicación con LABOFAR",
+		"consultaDatos": "Consulta de datos almacenados",
+		"datosAlmacenados": "Datos almacenados en LABOFAR",
+		"comunicacionExito": "La comunicación se ha realizado con éxito",
+		"comunicacionError": "Ha habido un error en la comunicación"
+	},
+	"geoeuskadi": {
+		"geoeuskadi": "GEOEUSKADI",
+		"confirmacionSubida": "¿Desea subir el fichero?<br>Se subirá a {0}"
+	},
+	"seccionesCorreoDAC": {
+		"preguntaConfirmacion": "¿Quiere enviar un correo a la DAC informando de los cambios realizados?",
+		"tituloConfirmacion": "Enviar correo a la DAC",
+		"envioCorreoError": "Ocurrió un error al enviar el correo",
+		"asuntoCorreo": "SECCIÓN DE ORTOPEDIA - Comunicación a Aseguramiento y Contratación",
+		"cuerpoCorreo": "<div>Identificador de la farmacia: {0}</div><div>Titular anterior:</div><div>Titular de la farmacia:</div><div>Localización actual de la farmacia:</div><div>Tipo de sección:</div><div>Persona al frente de la sección:</div>",
+		"tituloModal": "Envío de correo a la DAC",
+		"mensaje": "Mensaje",
+		"asunto": "Asunto",
+		"envioCorreoOk": "Correo enviado correctamente"
+	},
+	"controlCargaSolicitudes": {
+		"descargarCLOBSolicitud": "XML Solicitud",
+		"descargarCLOBMensaje": "XML Mensaje",
+		"descargarMensaje": "Descargar mensaje",
+		"subirMensaje": "Subir mensaje",
+		"ejecutarProceso": "Ejecutar proceso",
+		"resultadoOK": "OK",
+		"resultadoError": "Error",
+		"subirMensajeConfirmacion": "¿Desea subir el mensaje?",
+		"subirMensajeExito": "Mensaje subido con éxito",
+		"subirMensajeError": "Ha ocurrido un error al subir el mensaje",
+		"ejecutarProcesoConfirmacion": "¿Desea ejecutar el proceso?",
+		"ejecutarProcesoExito": "El proceso se ha ejecutado con éxito",
+		"ejecutarProcesoError": "Ha ocurrido un error al ejecutar el proceso"
+	},
+	"cargaAutorizacionMetadona": {
+		"avisoFormato": "Las celdas de las fechas deben tener formato de fecha o un formato de texto dd/mm/aaaa",
+		"confirmacionCarga": "¿Desea cargar las nuevas fechas de autorización?"
+	},
+	"descripcionProcedimientos": {
+		"descripcion_1057501": "Autorización de funcionamiento de Oficina de Farmacia",
+		"descripcion_1057502": "Autorización de obras en oficina de farmacia",
+		"descripcion_1057503": "Comunicaciones",
+		"descripcion_1057504": "Autorización de creación de sección",
+		"descripcion_1057505": "Autorización de horarios y guardias de las farmacias",
+		"descripcion_1057506": "Creación de oficina de farmacia",
+		"descripcion_1057507": "Autorización de cambio de la persona profesional que atiende la sección",
+		"descripcion_1057508": "Autorización de traslado",
+		"descripcion_1057510": "Autorización de cruz",
+		"descripcion_1057511": "Autorización de nombramientos",
+		"descripcion_1057512": "Determinación del número de farmacéuticos adjuntos obligatorios en oficina de farmacia para el próximo año",
+		"descripcion_1057517": "Autorización de transmisión",
+		"descripcion_1057519": "Autorización de cierre",
+		"descripcion_1057521": "Formulación magistral"
+	},
+	"formulacionMagistral": {
+		"sinNivel": "Sin nivel",
+		"soloMetadona": "Solo metadona",
+		"nivel1": "Nivel 1",
+		"nivel2": "Nivel 2",
+		"nivel3": "Nivel 3",
+		"formasTopicas": "Formas tópicas y formas líquidas no estériles",
+		"formasOrales": "Formas orales sólidas – Cápsulas",
+		"formasEsteriles": "Formas estériles"
+	},
+	"exp1057521": {
+		"actualizarDatosCenso": "¿Desea actualizar los datos de formulación magistral con los datos presentados en el expediente?"
+	},
+	"designaciones": {
+		"confirmRegenteBajaTitulares": "Al dar de alta/modificar un regente activo se va a proceder a dar de baja los titulares activos, ¿Desea continuar?"
+	}
+}
