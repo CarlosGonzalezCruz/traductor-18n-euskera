@@ -6,6 +6,8 @@ import java.util.Optional;
 
 public interface i18nResourceFile {
     
+    String getName();
+
     Map<String, String> getProperties();
 
     int size();

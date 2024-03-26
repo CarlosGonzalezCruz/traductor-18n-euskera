@@ -19,21 +19,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class i18nJsonResourceFile implements i18nResourceFile {
 
     private Map<String, String> properties;
+    private String sourcePath;
     private String targetPath;
 
-    private i18nJsonResourceFile(Map<String, String> properties, String targetPath) {
+    private i18nJsonResourceFile(Map<String, String> properties, String sourcePath, String targetPath) {
         this.properties = properties;
+        this.sourcePath = sourcePath;
         this.targetPath = targetPath;
     }
 
-    public static i18nJsonResourceFile load(String path, String targetPath) throws IOException {
+    public static i18nJsonResourceFile load(String sourcePath, String targetPath) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();           
-		InputStream stream = loader.getResourceAsStream(path);
+		InputStream stream = loader.getResourceAsStream(sourcePath);
         Map<?, ?> map = mapper.readValue(stream, Map.class);
         Map<String, String> flatMap = flattenHierarchy(map, "");
 
-		return new i18nJsonResourceFile(flatMap, targetPath);
+		return new i18nJsonResourceFile(flatMap, sourcePath, targetPath);
+    }
+
+    @Override
+    public String getName() {
+        return this.sourcePath;
     }
 
     @Override

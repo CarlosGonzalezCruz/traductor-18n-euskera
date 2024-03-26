@@ -16,17 +16,19 @@ import java.util.Properties;
 public class i18nPropertiesResourceFile implements i18nResourceFile {
 
     private Map<String, String> properties;
+    private String sourcePath;
     private String targetPath;
 
-    private i18nPropertiesResourceFile(Map<String, String> properties, String targetPath) {
+    private i18nPropertiesResourceFile(Map<String, String> properties, String sourcePath, String targetPath) {
         this.properties = properties;
+        this.sourcePath = sourcePath;
         this.targetPath = targetPath;
     }
 
-    public static i18nPropertiesResourceFile load(String path, String targetPath) throws IOException {
+    public static i18nPropertiesResourceFile load(String sourcePath, String targetPath) throws IOException {
         Properties properties = new Properties();
 		ClassLoader loader = Thread.currentThread().getContextClassLoader();           
-		InputStream stream = loader.getResourceAsStream(path);
+		InputStream stream = loader.getResourceAsStream(sourcePath);
 		properties.load(new InputStreamReader(stream, Charset.forName("UTF-8")));
 
 		Map<String, String> ret = new HashMap<>();
@@ -34,7 +36,12 @@ public class i18nPropertiesResourceFile implements i18nResourceFile {
 			ret.put(key, properties.getProperty(key));
 		}
 
-        return new i18nPropertiesResourceFile(ret, targetPath);
+        return new i18nPropertiesResourceFile(ret, sourcePath, targetPath);
+    }
+
+    @Override
+    public String getName() {
+        return this.sourcePath;
     }
 
     @Override

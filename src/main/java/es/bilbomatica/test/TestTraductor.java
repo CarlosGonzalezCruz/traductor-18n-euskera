@@ -5,16 +5,21 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
+import org.xml.sax.SAXException;
 
 import es.bilbomatica.test.exceptions.NotEnoughCapacityException;
 import es.bilbomatica.test.logic.i18nJsonResourceFile;
 import es.bilbomatica.test.logic.i18nPropertiesResourceFile;
 import es.bilbomatica.test.logic.i18nResourceFile;
+import es.bilbomatica.test.logic.i18nXMLResourceFile;
 import es.bilbomatica.test.model.TraductorRequest;
 import es.bilbomatica.test.model.TraductorResponse;
 
@@ -24,18 +29,21 @@ public class TestTraductor {
 	private final static String PROPERTIES_RESOURCE_PATH_EU = "static/ad50bWebApp.i18n_eu.properties";
 	private final static String JSON_RESOURCE_PATH_ES = "static/ad50bWebApp.i18n_es.json";
 	private final static String JSON_RESOURCE_PATH_EU = "static/ad50bWebApp.i18n_eu.json";
+	private final static String XML_RESOURCE_PATH = "static/1057501.xml";
 	private final static Long WAIT_BETWEEN_QUERIES_MS = 0L;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException, InterruptedException, ParserConfigurationException, SAXException, XPathExpressionException {
 
         System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 
 		i18nResourceFile[] files = new i18nResourceFile[] {
 			i18nPropertiesResourceFile.load(PROPERTIES_RESOURCE_PATH_ES, PROPERTIES_RESOURCE_PATH_EU),
-			i18nJsonResourceFile.load(JSON_RESOURCE_PATH_ES, JSON_RESOURCE_PATH_EU)
+			i18nJsonResourceFile.load(JSON_RESOURCE_PATH_ES, JSON_RESOURCE_PATH_EU),
+			i18nXMLResourceFile.load(XML_RESOURCE_PATH)
 		};
 
 		for(i18nResourceFile file : files) {
+			System.out.println("Traduciendo el archivo '" + file.getName() + "''...");
 			translateFile(file);
 			file.save();
 		}
