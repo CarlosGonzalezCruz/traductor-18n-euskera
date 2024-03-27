@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.xml.sax.SAXException;
 
-import es.bilbomatica.test.exceptions.NotEnoughCapacityException;
 import es.bilbomatica.test.logic.i18nJsonResourceFile;
 import es.bilbomatica.test.logic.i18nPropertiesResourceFile;
 import es.bilbomatica.test.logic.i18nResourceFile;

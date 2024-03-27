@@ -14,6 +14,7 @@
 				<pestana name="pestanaSolicitante">
 					<texto>
 						<i18n idioma="es">Datos personales</i18n>
+						<i18n idioma="eu">Datu pertsonalak</i18n>
 					</texto>
 					<elementosGrupo>
 						<datosTodosLosInteresados numeroDeInteresados="1" numeroDeObligatorios="1" canal="presencial" actuaSiempreEnRepresentacion="false" name="x43kDatosHolders"/>

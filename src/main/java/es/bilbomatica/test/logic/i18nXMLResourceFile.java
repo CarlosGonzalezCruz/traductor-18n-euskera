@@ -30,6 +30,12 @@ import org.xml.sax.SAXException;
 
 public class i18nXMLResourceFile implements i18nResourceFile {
 
+    private static final String XPATH_I18N_CONTAINERS_ABSOLUTE = "//*[./i18n]";
+    private static final String XPATH_I18N_ES_RELATIVE = "./i18n[@idioma = 'es']";
+    private static final String XPATH_I18N_EU_RELATIVE = "./i18n[@idioma = 'eu']";
+    private static final String NEW_I18N_ATTRIBUTE_LANGUAGE_KEY = "idioma";
+    private static final String NEW_I18N_ATTRIBUTE_LANGUAGE_VALUE = "eu";
+
     private Map<String, String> properties;
     private String path;
     private Document xmlDocument;
@@ -105,12 +111,14 @@ public class i18nXMLResourceFile implements i18nResourceFile {
         XPath xPath = XPathFactory.newInstance().newXPath();
         Map<String, String> ret = new HashMap<>();
 
-        NodeList nodes = (NodeList) xPath.compile("//*/texto").evaluate(xmlDocument, XPathConstants.NODESET);
-        XPathExpression textFinder = xPath.compile("./i18n[@idioma = 'es']");
+        NodeList nodes = (NodeList) xPath.compile(XPATH_I18N_CONTAINERS_ABSOLUTE).evaluate(xmlDocument, XPathConstants.NODESET);
+        XPathExpression textFinder = xPath.compile(XPATH_I18N_ES_RELATIVE);
 
         for(int i = 0; i < nodes.getLength(); i++) {
             Node untranslatedText = (Node) textFinder.evaluate(nodes.item(i), XPathConstants.NODE);
-            ret.put(String.valueOf(i), untranslatedText.getFirstChild().getNodeValue());
+            if(untranslatedText.getFirstChild() != null) {
+                ret.put(String.valueOf(i), untranslatedText.getFirstChild().getNodeValue());
+            }
         }
 
         return ret;
@@ -119,14 +127,14 @@ public class i18nXMLResourceFile implements i18nResourceFile {
     private static void insertPropertiesIntoXML(Document xmlDocument, Map<String, String> properties) throws XPathExpressionException {
         XPath xPath = XPathFactory.newInstance().newXPath();
 
-        NodeList nodes = (NodeList) xPath.compile("//*/texto").evaluate(xmlDocument, XPathConstants.NODESET);
-        XPathExpression textFinder = xPath.compile("./i18n[@idioma = 'eu']");
+        NodeList nodes = (NodeList) xPath.compile(XPATH_I18N_CONTAINERS_ABSOLUTE).evaluate(xmlDocument, XPathConstants.NODESET);
+        XPathExpression textFinder = xPath.compile(XPATH_I18N_EU_RELATIVE);
 
         for(int i = 0; i < nodes.getLength(); i++) {
             Node translatedText = (Node) textFinder.evaluate(nodes.item(i), XPathConstants.NODE);
             if(translatedText == null) {
                 translatedText = xmlDocument.createElement("i18n");
-                ((Element) translatedText).setAttribute("idioma", "eu");
+                ((Element) translatedText).setAttribute(NEW_I18N_ATTRIBUTE_LANGUAGE_KEY, NEW_I18N_ATTRIBUTE_LANGUAGE_VALUE);
                 nodes.item(i).appendChild(xmlDocument.createTextNode("\t"));
                 nodes.item(i).appendChild(translatedText);
                 nodes.item(i).appendChild(xmlDocument.createTextNode("\n\t"));
