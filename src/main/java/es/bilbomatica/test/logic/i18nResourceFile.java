@@ -1,6 +1,7 @@
 package es.bilbomatica.test.logic;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,5 +17,7 @@ public interface i18nResourceFile {
 
     void updateProperties(Map<String, String> newProperties);
 
-    void save() throws IOException;
+    void updateName();
+
+    void writeToOutput(OutputStream stream) throws IOException;
 }

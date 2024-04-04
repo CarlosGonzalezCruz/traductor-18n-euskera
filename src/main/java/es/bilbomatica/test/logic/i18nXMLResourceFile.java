@@ -1,8 +1,10 @@
 package es.bilbomatica.test.logic;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,7 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -37,18 +40,17 @@ public class i18nXMLResourceFile implements i18nResourceFile {
     private static final String NEW_I18N_ATTRIBUTE_LANGUAGE_VALUE = "eu";
 
     private Map<String, String> properties;
-    private String path;
+    private String name;
     private Document xmlDocument;
 
-    private i18nXMLResourceFile(Map<String, String> properties, String path, Document xmlDocument) {
+    private i18nXMLResourceFile(Map<String, String> properties, String name, Document xmlDocument) {
         this.properties = properties;
-        this.path = path;
+        this.name = name;
         this.xmlDocument = xmlDocument;
     }
 
-    public static i18nXMLResourceFile load(String path) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();           
-		InputStream stream = loader.getResourceAsStream(path);
+    public static i18nXMLResourceFile load(MultipartFile file) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {        
+		InputStream stream = new BufferedInputStream(file.getInputStream());
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -56,12 +58,12 @@ public class i18nXMLResourceFile implements i18nResourceFile {
 
 		Map<String, String> ret = parseXMLIntoProperties(xmlDocument);
 
-        return new i18nXMLResourceFile(ret, path, xmlDocument);
+        return new i18nXMLResourceFile(ret, file.getOriginalFilename(), xmlDocument);
     }
 
     @Override
     public String getName() {
-        return this.path;
+        return this.name;
     }
 
     @Override
@@ -86,10 +88,12 @@ public class i18nXMLResourceFile implements i18nResourceFile {
     }
 
     @Override
-    public void save() throws IOException {
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource(".").getFile() + "/" + this.path);
-        file.createNewFile(); // Por si no existe
+    public void updateName() {
+        // No hacer nada, intencionalmente
+    }
 
+    @Override
+    public void writeToOutput(OutputStream stream) throws IOException {
         try {
             insertPropertiesIntoXML(xmlDocument, properties);
         } catch (XPathExpressionException e) {
@@ -100,8 +104,8 @@ public class i18nXMLResourceFile implements i18nResourceFile {
             TransformerFactory transformerFactory = TransformerFactory.newInstance(); 
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(xmlDocument); 
-            StreamResult result = new StreamResult(file); 
-            transformer.transform(source, result); 
+            StreamResult result = new StreamResult(stream);
+            transformer.transform(source, result);
         } catch (TransformerException e) {
             throw new IOException(e);
         } 

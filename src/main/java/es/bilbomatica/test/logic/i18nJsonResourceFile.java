@@ -1,7 +1,6 @@
 package es.bilbomatica.test.logic;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,35 +11,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Map.Entry;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class i18nJsonResourceFile implements i18nResourceFile {
 
-    private Map<String, String> properties;
-    private String sourcePath;
-    private String targetPath;
+    private final String UPDATE_NAME_FIND_REGEX = "^(.*)(?<=\\W|_)es(.*)?$";
+    private final String UPDATE_NAME_REPLACE_REGEX = "$1eu$2";
 
-    private i18nJsonResourceFile(Map<String, String> properties, String sourcePath, String targetPath) {
+    private Map<String, String> properties;
+    private String name;
+
+    private i18nJsonResourceFile(Map<String, String> properties, String name) {
         this.properties = properties;
-        this.sourcePath = sourcePath;
-        this.targetPath = targetPath;
+        this.name = name;
     }
 
-    public static i18nJsonResourceFile load(String sourcePath, String targetPath) throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-		ClassLoader loader = Thread.currentThread().getContextClassLoader();           
-		InputStream stream = loader.getResourceAsStream(sourcePath);
+    public static i18nJsonResourceFile load(MultipartFile file) throws IOException {
+        ObjectMapper mapper = new ObjectMapper();         
+		InputStream stream = new BufferedInputStream(file.getInputStream());
         Map<?, ?> map = mapper.readValue(stream, Map.class);
         Map<String, String> flatMap = flattenHierarchy(map, "");
 
-		return new i18nJsonResourceFile(flatMap, sourcePath, targetPath);
+		return new i18nJsonResourceFile(flatMap, file.getOriginalFilename());
     }
 
     @Override
     public String getName() {
-        return this.sourcePath;
+        return this.name;
     }
 
     @Override
@@ -65,14 +67,14 @@ public class i18nJsonResourceFile implements i18nResourceFile {
     }
 
     @Override
-    public void save() throws IOException {
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource(".").getFile() + "/" + this.targetPath);
-        file.createNewFile(); // Por si no existe
+    public void updateName() {
+        this.name = name.replaceAll(UPDATE_NAME_FIND_REGEX, UPDATE_NAME_REPLACE_REGEX);
+    }
 
-        OutputStream output = new FileOutputStream(file);
+    @Override
+    public void writeToOutput(OutputStream stream) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        mapper.writeValue(output, restoreHierarchy(properties));
-        output.close();
+        mapper.writeValue(stream, restoreHierarchy(properties));
     }
 
     private static Map<String, String> flattenHierarchy(Map<?, ?> properties, String keyPrefix) {

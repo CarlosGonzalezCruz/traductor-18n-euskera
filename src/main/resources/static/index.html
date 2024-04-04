@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Traductor i18n</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css" />
+  </head>
+  <body>
+    <div class="full-screen-height">
+        <div class="d-flex justify-content-center h-100 align-items-center">
+            <div class="border rounded p-3">
+                <form method="POST" enctype="multipart/form-data" action="/">
+                    <table>
+                        <tr><td><label>Tipo</label></td><td>
+                            <select class="form-control" name="filetype">
+                                <option>Auto</option>
+                                <option>Properties</option>
+                                <option>JSON</option>
+                                <option>XML</option>
+                            </select>
+                        </td></tr>
+                        <tr><td><label>Archivo</label></td><td><input class="form-control" type="file" name="file" /></td></tr>
+                        <tr><td></td><td><input class="form-control" type="submit" value="Enviar a traducir" /></td></tr>
+                    </table>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  </body>
+</html>
+
+
+<!-- <body>
+    <form method="POST" enctype="multipart/form-data" action="/">
+        <table>
+            <tr><td>File type:</td><td>
+                <select name="filetype">
+                    <option>Auto</option>
+                    <option>Properties</option>
+                    <option>JSON</option>
+                    <option>XML</option>
+                </select>
+            </td></tr>
+            <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+            <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+        </table>
+    </form>
+</body> -->

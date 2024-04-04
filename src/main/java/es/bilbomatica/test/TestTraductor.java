@@ -24,7 +24,7 @@ import es.bilbomatica.test.model.TraductorResponse;
 
 public class TestTraductor {
 
-	private final static String PROPERTIES_RESOURCE_PATH_ES = "static/ad50bWebApp.i18n_es.properties";
+/* 	private final static String PROPERTIES_RESOURCE_PATH_ES = "static/ad50bWebApp.i18n_es.properties";
 	private final static String PROPERTIES_RESOURCE_PATH_EU = "static/ad50bWebApp.i18n_eu.properties";
 	private final static String JSON_RESOURCE_PATH_ES = "static/ad50bWebApp.i18n_es.json";
 	private final static String JSON_RESOURCE_PATH_EU = "static/ad50bWebApp.i18n_eu.json";
@@ -80,5 +80,6 @@ public class TestTraductor {
 
 		return response.getBody().getMessage();
 	}
+	*/
     
 }

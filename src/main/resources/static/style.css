@@ -1,0 +1,10 @@
+
+.full-screen-height {
+    height: 100vh;
+    min-height: 100vh;
+}
+
+td {
+    padding: 1%;
+    min-width: 5em;
+}
