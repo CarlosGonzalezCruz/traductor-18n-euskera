@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -12,11 +13,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import es.bilbomatica.test.logic.i18nResourceFile;
-import es.bilbomatica.test.model.TraductorRequest;
-import es.bilbomatica.test.model.TraductorResponse;
+import es.bilbomatica.traductor.controllers.ProgressControllerWS;
+import es.bilbomatica.traductor.model.ProgressUpdate;
+import es.bilbomatica.traductor.model.TraductorRequest;
+import es.bilbomatica.traductor.model.TraductorResponse;
 
 @Service
 public class TraductorServiceImpl implements TraductorService {
+
+	@Autowired
+	private ProgressControllerWS progressControllerWS;
 
     private final static Long WAIT_BETWEEN_QUERIES_MS = 0L;
 
@@ -28,14 +34,17 @@ public class TraductorServiceImpl implements TraductorService {
 		Map<String, String> properties = new HashMap<>(file.getProperties());
 		int i = 0;
 		for(Entry<String, String> property : properties.entrySet()) {
-			System.out.print("[" + ++i + "/" + properties.size() + "] " + property.getValue() + " - ");
+			System.out.print("[" + i + "/" + properties.size() + "] " + property.getValue() + " - ");
 			String translatedValue = sendToTranslate(property.getValue());
 			System.out.println(translatedValue);
 			properties.put(property.getKey(), translatedValue);
+			progressControllerWS.sendUpdate(new ProgressUpdate(i, properties.size(), false));
 			Thread.sleep(WAIT_BETWEEN_QUERIES_MS);
+			i++;
 		}
 		file.updateProperties(properties);
 		file.updateName();
+		progressControllerWS.sendUpdate(new ProgressUpdate(i, properties.size(), true));
 	}
 
 	private static String sendToTranslate(String content) {

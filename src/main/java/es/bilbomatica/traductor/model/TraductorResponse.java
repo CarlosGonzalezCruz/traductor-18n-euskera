@@ -1,4 +1,4 @@
-package es.bilbomatica.test.model;
+package es.bilbomatica.traductor.model;
 
 public class TraductorResponse {
 
