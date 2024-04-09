@@ -16,10 +16,23 @@
     transition: opacity 0.2s;
 }
 
-.min-width {
-    min-width: 400px;
+.form-size {
+    width: 600px;
+    min-width: 600px;
+    max-width: 600px;
 }
 
 .bg-danger-soft {
     background: var(--bs-danger-soft-color)
+}
+
+.logo-size {
+    width: 200px;
+    height: 70px;
+    min-width: 200px;
+    height: 70px;
+}
+
+.logo-scale {
+    transform: scale(0.6);
 }
