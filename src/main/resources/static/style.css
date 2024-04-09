@@ -1,10 +1,25 @@
 
+:root {
+    --bs-danger-soft-color: #fdd2d6
+}
+
 .full-screen-height {
     height: 100vh;
     min-height: 100vh;
 }
 
-td {
-    padding: 1%;
-    min-width: 5em;
+.hidden-by-opacity {
+    opacity: 0;
+}
+
+.opacity-animated {
+    transition: opacity 0.2s;
+}
+
+.min-width {
+    min-width: 400px;
+}
+
+.bg-danger-soft {
+    background: var(--bs-danger-soft-color)
 }

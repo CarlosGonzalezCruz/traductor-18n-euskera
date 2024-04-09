@@ -16,7 +16,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map.Entry;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import es.bilbomatica.traductor.exceptions.WrongFormatException;
 
 public class i18nJsonResourceFile implements i18nResourceFile {
 
@@ -31,13 +34,20 @@ public class i18nJsonResourceFile implements i18nResourceFile {
         this.name = name;
     }
 
-    public static i18nJsonResourceFile load(MultipartFile file) throws IOException {
+    public static i18nJsonResourceFile load(MultipartFile file) throws IOException, WrongFormatException {
         ObjectMapper mapper = new ObjectMapper();         
 		InputStream stream = new BufferedInputStream(file.getInputStream());
-        Map<?, ?> map = mapper.readValue(stream, Map.class);
-        Map<String, String> flatMap = flattenHierarchy(map, "");
 
-		return new i18nJsonResourceFile(flatMap, file.getOriginalFilename());
+        try {
+            Map<?, ?> map = mapper.readValue(stream, Map.class);
+            Map<String, String> flatMap = flattenHierarchy(map, "");
+    
+            return new i18nJsonResourceFile(flatMap, file.getOriginalFilename());
+
+        } catch(JsonParseException e) {
+            throw new WrongFormatException(file.getOriginalFilename(), I18nResourceFileType.JSON.getName());
+
+        }
     }
 
     @Override

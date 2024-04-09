@@ -29,6 +29,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+
+import es.bilbomatica.traductor.exceptions.WrongFormatException;
 
 public class i18nXMLResourceFile implements i18nResourceFile {
 
@@ -48,16 +51,23 @@ public class i18nXMLResourceFile implements i18nResourceFile {
         this.xmlDocument = xmlDocument;
     }
 
-    public static i18nXMLResourceFile load(MultipartFile file) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException {        
+    public static i18nXMLResourceFile load(MultipartFile file) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, WrongFormatException {        
 		InputStream stream = new BufferedInputStream(file.getInputStream());
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        Document xmlDocument = builder.parse(stream);
+        
+        try {
+            Document xmlDocument = builder.parse(stream);
+            Map<String, String> ret = parseXMLIntoProperties(xmlDocument);
 
-		Map<String, String> ret = parseXMLIntoProperties(xmlDocument);
+            return new i18nXMLResourceFile(ret, file.getOriginalFilename(), xmlDocument);
 
-        return new i18nXMLResourceFile(ret, file.getOriginalFilename(), xmlDocument);
+        } catch(SAXParseException e) {
+            throw new WrongFormatException(file.getOriginalFilename(), I18nResourceFileType.XML.getName());
+
+        }
+
     }
 
     @Override

@@ -7,6 +7,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,7 +21,10 @@ import es.bilbomatica.test.logic.i18nPropertiesResourceFile;
 import es.bilbomatica.test.logic.i18nResourceFile;
 import es.bilbomatica.test.logic.i18nXMLResourceFile;
 import es.bilbomatica.traductor.TraductorService;
+import es.bilbomatica.traductor.exceptions.BusinessException;
 import es.bilbomatica.traductor.exceptions.InvalidI18nResourceTypeException;
+import es.bilbomatica.traductor.exceptions.WrongFormatException;
+import es.bilbomatica.traductor.model.ErrorMessage;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -28,6 +32,9 @@ public class TraductorController {
 
     @Autowired
     private TraductorService traductorService;
+
+    @Autowired
+    private ProgressControllerWS progressControllerWS;
 
     @GetMapping("/")
     public String index() {
@@ -38,10 +45,10 @@ public class TraductorController {
 	public void translateFile(HttpServletResponse response,
             @RequestParam("filetype") String filetype,
             @RequestParam("file") MultipartFile file,
-			RedirectAttributes redirectAttributes) throws IOException, InterruptedException, XPathExpressionException, ParserConfigurationException, SAXException, InvalidI18nResourceTypeException {
+            RedirectAttributes redirectAttributes) throws IOException, InterruptedException, XPathExpressionException, ParserConfigurationException, SAXException, BusinessException {
 
         i18nResourceFile resourceFile = parseResourceFile(filetype, file);
-
+            
         traductorService.translateFile(resourceFile);
 
         response.setContentType("text/plain");
@@ -51,7 +58,7 @@ public class TraductorController {
 	}
 
 
-    private i18nResourceFile parseResourceFile(String filetype, MultipartFile file) throws InvalidI18nResourceTypeException, XPathExpressionException, IOException, ParserConfigurationException, SAXException {
+    private i18nResourceFile parseResourceFile(String filetype, MultipartFile file) throws InvalidI18nResourceTypeException, XPathExpressionException, IOException, ParserConfigurationException, SAXException, WrongFormatException {
         
         i18nResourceFile ret;
         String filename = file.getOriginalFilename();
@@ -78,4 +85,16 @@ public class TraductorController {
 
         return ret;
     }
+
+    @ExceptionHandler
+    public void handleException(Exception e) {
+        if(e instanceof BusinessException) {
+            BusinessException eAsBEx = (BusinessException) e;
+            progressControllerWS.sendError(new ErrorMessage(eAsBEx.getUserMessage()));
+        } else {
+            e.printStackTrace();
+            progressControllerWS.sendError(new ErrorMessage("Ha ocurrido un problema inesperado en el servidor."));
+        }
+    }
+
 }

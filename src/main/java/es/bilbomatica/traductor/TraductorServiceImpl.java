@@ -1,8 +1,11 @@
 package es.bilbomatica.traductor;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -10,10 +13,15 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.HttpClientErrorException.TooManyRequests;
 
 import es.bilbomatica.test.logic.i18nResourceFile;
 import es.bilbomatica.traductor.controllers.ProgressControllerWS;
+import es.bilbomatica.traductor.exceptions.TraductorNeuronalRateLimitException;
+import es.bilbomatica.traductor.exceptions.TraductorNeuronalUnreachableException;
+import es.bilbomatica.traductor.model.CancellationToken;
 import es.bilbomatica.traductor.model.ProgressUpdate;
 import es.bilbomatica.traductor.model.TraductorRequest;
 import es.bilbomatica.traductor.model.TraductorResponse;
@@ -30,24 +38,48 @@ public class TraductorServiceImpl implements TraductorService {
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
 	}
 
-    public void translateFile(i18nResourceFile file) throws InterruptedException {
+    public void translateFile(i18nResourceFile file) throws InterruptedException, TraductorNeuronalRateLimitException, TraductorNeuronalUnreachableException {
+		
 		Map<String, String> properties = new HashMap<>(file.getProperties());
+		long lastUpdateTimeNS = System.nanoTime();
+		List<Long> timePerUpdateNS = new ArrayList<>();
 		int i = 0;
+
+		CancellationToken cancellationToken = new CancellationToken();
+
+		progressControllerWS.sendUpdate(new ProgressUpdate(0, properties.size(), false, Optional.empty()));
+		progressControllerWS.assignCancellationToken(cancellationToken);
+
 		for(Entry<String, String> property : properties.entrySet()) {
-			System.out.print("[" + i + "/" + properties.size() + "] " + property.getValue() + " - ");
+
+			if(cancellationToken.isCancellationRequested()) {
+				break;
+			}
+			
 			String translatedValue = sendToTranslate(property.getValue());
-			System.out.println(translatedValue);
 			properties.put(property.getKey(), translatedValue);
-			progressControllerWS.sendUpdate(new ProgressUpdate(i, properties.size(), false));
+			
+			timePerUpdateNS.add(System.nanoTime() - lastUpdateTimeNS);
+			lastUpdateTimeNS = System.nanoTime();
+			long remainingTimeNS = calculateRemainingTimeNS(timePerUpdateNS, properties.size());
+			
+			progressControllerWS.sendUpdate(new ProgressUpdate(i, properties.size(), false, Optional.of(remainingTimeNS)));
+			
 			Thread.sleep(WAIT_BETWEEN_QUERIES_MS);
 			i++;
 		}
-		file.updateProperties(properties);
-		file.updateName();
-		progressControllerWS.sendUpdate(new ProgressUpdate(i, properties.size(), true));
+		
+		if(!cancellationToken.isCancellationRequested()) {
+			file.updateProperties(properties);
+			file.updateName();	
+		}
+		
+		progressControllerWS.sendUpdate(new ProgressUpdate(i, properties.size(), true, Optional.empty()));
+		progressControllerWS.revokeCancellationToken();
 	}
 
-	private static String sendToTranslate(String content) {
+	@SuppressWarnings("null")
+	private static String sendToTranslate(String content) throws TraductorNeuronalRateLimitException, TraductorNeuronalUnreachableException {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", "application/json");
 		headers.set("Origin", "https://www.euskadi.eus");
@@ -59,10 +91,25 @@ public class TraductorServiceImpl implements TraductorService {
 
 		HttpEntity<TraductorRequest> entity = new HttpEntity<>(request, headers);
 
-		ResponseEntity<TraductorResponse> response = new RestTemplate().exchange("https://api.euskadi.eus/itzuli/es2eu/translate",
-				HttpMethod.POST, entity, TraductorResponse.class);
-
-		return response.getBody().getMessage();
+		try {
+			ResponseEntity<TraductorResponse> response = new RestTemplate().exchange("https://api.euskadi.eus/itzuli/es2eu/translate",
+					HttpMethod.POST, entity, TraductorResponse.class);
+	
+			return response.getBody().getMessage();
+		
+		} catch(TooManyRequests e) {
+			throw new TraductorNeuronalRateLimitException();
+			
+		} catch(HttpClientErrorException e) {
+			throw new TraductorNeuronalUnreachableException();
+			
+		}
 	}
 
+	private long calculateRemainingTimeNS(List<Long> timePerUpdateNS, int total) {
+		long averageTimePerUpdateNS = timePerUpdateNS.stream().reduce(0L, Long::sum) / timePerUpdateNS.size();
+		int remaining = total - timePerUpdateNS.size();
+
+		return remaining * (averageTimePerUpdateNS + WAIT_BETWEEN_QUERIES_MS);
+	}
 }

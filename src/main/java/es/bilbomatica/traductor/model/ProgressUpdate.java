@@ -1,5 +1,7 @@
 package es.bilbomatica.traductor.model;
 
+import java.util.Optional;
+
 public class ProgressUpdate {
 
     private int current;
@@ -8,10 +10,13 @@ public class ProgressUpdate {
 
     private boolean done;
 
-    public ProgressUpdate(int current, int total, boolean done) {
+    private Optional<Long> remainingTimeNS;
+
+    public ProgressUpdate(int current, int total, boolean done, Optional<Long> remainingTimeNS) {
         this.current = current;
         this.total = total;
         this.done = done;
+        this.remainingTimeNS = remainingTimeNS;
     }
 
     public int getCurrent() {
@@ -36,5 +41,13 @@ public class ProgressUpdate {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public Optional<Long> getRemainingTimeNS() {
+        return remainingTimeNS;
+    }
+
+    public void setRemainingTimeNS(Optional<Long> remainingTimeNS) {
+        this.remainingTimeNS = remainingTimeNS;
     }
 }
