@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <title>Traductor i18n</title>
     <link rel="icon" type="image/png" href="images/favicon.png" />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="libraries/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css" />
 
-    <script src="https://cdn.jsdelivr.net/npm/@stomp/stompjs@5.0.0/bundles/stomp.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="libraries/stomp.umd.min.js"></script>
+    <script src="libraries/sockjs.min.js"></script>
+    <script src="libraries/jquery.min.js"></script>
 </head>
 
 <body>
@@ -22,52 +21,60 @@
             <div>
                 <img src="images/Bilbomatica_an_Altia_Company.svg" class="logo-size"></img>
             </div>
-            <div class="logo-scale">
-                <p class="w-100 text-center">Powered by</p>
-                <img src="images/web01-GV_itzuli_logotipo.svg" class="logo-size"></img>
-            </div>
         </div>
 
-        <div class="d-flex flex-column h-100">
-            <div class="d-flex flex-column justify-content-center h-100 align-items-center max-width">
-                <div class="d-flex flex-row border rounded shadow px-5 py-3 form-size w-100">
-                    <form id="main-form" class="w-100" method="POST" enctype="multipart/form-data" accept-charset="utf-8" action="/">
-                        <div class="d-flex flex-column">
-                            <div class="my-2 d-flex flex-column">
-                                <h3>
-                                    Traductor automático de recursos
-                                </h3>
-                                <p class="text-secondary">
-                                    Este servicio enviará su archivo de recurso i18n en castellano
-                                    al Traductor Neuronal y se lo devolverá traducido al euskera
-                                    pasados unos segundos.
-                                </p>
-                            </div>
+        <div class="d-flex flex-column w-100 h-100 align-items-center justify-content-center">
+            <div class="d-flex flex-row justify-content-center w-100 h-100 align-items-center form-size">
+               
+                <div class="d-none d-md-flex flex-row me-2 border rounded shadow px-5 py-3 w-50 h-100">
+                    <div class="d-flex flex-column justify-content-center">
+                        <div class="my-2 d-flex flex-column">
+                            <h3>
+                                Traductor automático de recursos
+                            </h3>
+                            <p class="text-secondary">
+                                Este servicio enviará su archivo de recurso i18n en castellano
+                                al Traductor Neuronal y se lo devolverá traducido al euskera
+                                pasados unos segundos.
+                            </p>
+                            <p class="text-secondary">
+                                Se aceptan archivos con las extensiones <code>.properties</code>,
+                                <code>.json</code> y <code>.xml</code>.
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card shadow ms-2 h-100 file-request-container-size">
+                    <div class="d-flex flex-column card-header h-100 overflow-y">
+
+                    </div>
+
+                    <div class="card-body">
+
+                        <form id="main-form" class="w-100" method="POST" enctype="multipart/form-data" accept-charset="utf-8" action="/">
                             <div class="d-flex flex-row my-2">
                                 <div class="border rounded border-danger bg-danger-soft w-100 d-none">
                                     <p id="text-error-content" class="p-2 mb-0"></p>
                                 </div>
                             </div>
-                            <div class="d-flex flex-row my-2">
+                            <div class="d-flex flex-column flex-lg-row my-2">
                                 <input id="file-upload-field" class="form-control" type="file" name="file" />
-                            </div>
-                            <div class="d-flex flex-row justify-content-around w-100 my-2">
-                                <div class="me-2 d-flex flex-row align-items-center">
-                                    <select id="filetype-field" class="form-select form-select-sm flex-grow-1 form-control dropdown" name="filetype">
-                                        <option value="Auto">Detectar formato automáticamente</option>
-                                        <option>Properties</option>
-                                        <option>JSON</option>
-                                        <option>XML</option>
-                                    </select>
-                                </div>
-                                <div class="ms-2">
-                                    <input id="button-submit" class="form-control btn btn-primary" type="submit" value="Enviar a traducir" disabled/>
+                                <div class="my-2 my-lg-0 mx-lg-2">
+                                    <button id="button-submit" class="form-control btn btn-primary h-100" disabled>
+                                        <img src="icons/upload.svg" class="svg-inverted-color"/>
+                                        &nbsp;
+                                        <p>Enviar</p>
+                                    </button>
                                 </div>
                             </div>
-                        </div>
-                    </form>
-                    <a id="auxiliar-download-link" class="d-none"></a>
+                        </form>
+                        <a id="auxiliar-download-link" class="d-none"></a>
+                        
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
@@ -112,9 +119,7 @@
     </div>
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+    <script src="libraries/bootstrap.bundle.min.js"></script>
     <script src="index.js"></script>
 </body>
 

@@ -6,10 +6,10 @@
 
     function init() {
         stompClient = new StompJs.Client({
-            brokerURL: '/progress',
+            brokerURL: 'ws://' + window.location.host + '/progress',
             onConnect: () => {
                 stompClient.subscribe('/topic/updates', updateProgressWindow);
-                stompClient.subscribe('/topic/errors', processErrorMessage);
+                stompClient.subscribe('/topic/requests', m => console.log(JSON.parse(m.body)));
             },
             onDisconnect: () => {
 
@@ -43,7 +43,7 @@
         try {
             cancelRequested = false;
             let formData = new FormData($("#main-form")[0]);
-            let response = await fetch("", {
+            let response = await fetch("/request", {
                 method: "POST",
                 body: formData
             });
@@ -97,6 +97,7 @@
     function updateProgressWindow(message) {
         let data = JSON.parse(message.body);
         let progressRatio = data.current / data.total * 100;
+        console.log(data);
         
         $("#progress-window .progress-bar").attr("aria-valuenow", progressRatio).css("width", progressRatio + "%");
         $("#progress-current").text(data.current);
@@ -119,7 +120,7 @@
 
     function requestCancel() {
         cancelRequested = true;
-        stompClient.publish({destination: "/app/cancel"});
+        stompClient.publish({destination: "/request/cancel"});
     }
 
 

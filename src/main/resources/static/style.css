@@ -19,7 +19,13 @@
 .form-size {
     width: 600px;
     min-width: 600px;
-    max-width: 600px;
+    max-width: 75vw;
+    max-height: 75vh;
+}
+
+.file-request-container-size {
+    width: 50%;
+    max-width: 400px;
 }
 
 .bg-danger-soft {
@@ -35,4 +41,20 @@
 
 .logo-scale {
     transform: scale(0.6);
+}
+
+.svg-inverted-color {
+    filter: invert(1)
+}
+
+.btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn > p {
+    margin-bottom: 0;
+    padding: 0 0.5em;
 }

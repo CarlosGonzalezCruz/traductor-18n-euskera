@@ -1,10 +1,8 @@
 package es.bilbomatica.traductor;
 
-import es.bilbomatica.test.logic.i18nResourceFile;
-import es.bilbomatica.traductor.exceptions.TraductorNeuronalRateLimitException;
-import es.bilbomatica.traductor.exceptions.TraductorNeuronalUnreachableException;
+import es.bilbomatica.traductor.model.FileRequest;
 
 public interface TraductorService {
 
-    void translateFile(i18nResourceFile file) throws InterruptedException, TraductorNeuronalRateLimitException, TraductorNeuronalUnreachableException;
+    void translateFile(FileRequest fileRequest) throws InterruptedException;
 }
