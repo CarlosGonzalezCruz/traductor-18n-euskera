@@ -1,5 +1,6 @@
 package es.bilbomatica.traductor.exceptions;
 
+
 public abstract class BusinessException extends Exception {
 
     public BusinessException(String message) {

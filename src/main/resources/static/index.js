@@ -1,15 +1,15 @@
+window.exports = window.exports || {};
 
 (function() {
 
     let stompClient;
-    let cancelRequested;
 
     function init() {
         stompClient = new StompJs.Client({
-            brokerURL: '/progress',
+            brokerURL: 'ws://' + window.location.host + '/progress',
             onConnect: () => {
-                stompClient.subscribe('/topic/updates', updateProgressWindow);
-                stompClient.subscribe('/topic/errors', processErrorMessage);
+                stompClient.subscribe('/topic/updates', updateCards);
+                stompClient.subscribe('/topic/requests', m => renderAllRequests(JSON.parse(m.body)));
             },
             onDisconnect: () => {
 
@@ -17,12 +17,16 @@
         });
 
         stompClient.activate();
-        cancelRequested = false;
+
+        fetch("/request/all").then(async function(response) {
+            let requests = await response.json();
+            renderAllRequests(requests);
+        });
 
         $("#main-form").on("submit", function(e) {
             e.preventDefault();
-            startProgressWindow();
             submitForm();
+            
         });
 
         $("#file-upload-field").on("change", function() {
@@ -33,119 +37,73 @@
             }
         });
 
-        $("#progress-button-request-cancel").on("click", function() {
-            requestCancel();
+        $("#button-clear-completed").on("click", async function() {
+            await fetch("/request/completed", {
+                method: "DELETE"
+            });
         });
     }
 
 
     async function submitForm() {
-        try {
-            cancelRequested = false;
-            let formData = new FormData($("#main-form")[0]);
-            let response = await fetch("", {
-                method: "POST",
-                body: formData
-            });
-
-            if(cancelRequested) {
-                return;
-            }
-
-            let contentDisposition = response.headers.get('content-disposition');
-            let filename = contentDisposition.match("filename=(.*?)(?:;|$)")[1];
-            let fileBlob = await response.blob();
-            let fileURL = window.URL.createObjectURL(fileBlob);
-    
-            // Simulamos el activar un enlace de descarga para poder descargar el archivo
-            // correctamente con el nombre que indica el servidor
-            $("#auxiliar-download-link")[0].href = fileURL;
-            $("#auxiliar-download-link")[0].download = filename;
-            $("#auxiliar-download-link")[0].click();
-        
-        } catch(e) {
-            console.warn("No se descargará ningún archivo porque ha ocurrido un problema.");
-        }
-    }
-    
-    
-    function startProgressWindow() {
-        $("#progress-window").modal("show");
-        $("#progress-window .progress-bar").attr("aria-valuenow", 0).css("width", "0%");
-        $("#progress-estimated-time").addClass("d-none");
-        $("#progress-container").addClass("hidden-by-opacity");
-        $("#progress-current").text("-");
-        $("#progress-total").text("-");
-
         $("#text-error-content").parent().addClass("d-none");
-    }
 
+        let formData = new FormData($("#main-form")[0]);
 
-    function stopProgressWindow() {
-        let closeWindowInterval = setInterval(() => {
-            $("#progress-container").addClass("hidden-by-opacity");
-            if($("#progress-window").is(":visible")) {
-                $("#progress-window").modal("hide");
-                setTimeout(() => {
-                    clearInterval(closeWindowInterval);   
-                }, 500);
-            }
-        }, 250);
-    }
+        let response = await fetch("/request", {
+            method: "POST",
+            body: formData
+        });
 
-
-    function updateProgressWindow(message) {
-        let data = JSON.parse(message.body);
-        let progressRatio = data.current / data.total * 100;
-        
-        $("#progress-window .progress-bar").attr("aria-valuenow", progressRatio).css("width", progressRatio + "%");
-        $("#progress-current").text(data.current);
-        $("#progress-total").text(data.total);
-
-        if(data.remainingTimeNS) {
-            $("#progress-estimated-time").text(formatTimeToDisplay(data.remainingTimeNS));
-            $("#progress-estimated-time").removeClass("d-none");
+        if(!response.ok) {
+            let parsedResponse = await response.json();
+            renderErrorMessage(parsedResponse.errorMessage);
         } else {
-            $("#progress-estimated-time").addClass("d-none");
-        }
-
-        $("#progress-container").removeClass("hidden-by-opacity");
-
-        if(data.done) {
-            stopProgressWindow();
+            $("#file-upload-field").val(null).trigger("change");
+            setTimeout(() => $("#file-request-container > div").last()[0]
+                .scrollIntoView({ behavior: "smooth", block: "end" }),
+                200);
         }
     }
 
 
-    function requestCancel() {
-        cancelRequested = true;
-        stompClient.publish({destination: "/app/cancel"});
-    }
-
-
-    function processErrorMessage(message) {
+    function updateCards(message) {
         let data = JSON.parse(message.body);
 
-        $("#text-error-content").text(data.errorMessage);
+        let requestCard = window.exports.FileRequestCardsPerId[data.requestId];
+        if(requestCard) {
+            requestCard.update(data);
+        }
+    }
+
+
+    function renderAllRequests(requests) {
+        
+        if(requests.length == 0) {
+            $("#file-request-empty-filler").removeClass("d-none");
+            $("#file-request-container").addClass("d-none");
+        } else {
+            $("#file-request-empty-filler").addClass("d-none");
+            $("#file-request-container").removeClass("d-none");
+        }
+
+        let container = $("#file-request-container");
+        let template = $("#file-request-card-template");
+
+        container.children().not("#file-request-card-template").remove();
+        window.exports.FileRequestCardsPerId = {};
+
+        for(let request of requests) {
+            window.exports.FileRequestCard.create(container, template, request);
+        }
+    }
+
+
+    function renderErrorMessage(content) {
+        $("#text-error-content").text(content);
         $("#text-error-content").parent().removeClass("d-none");
-
-        stopProgressWindow();
     }
-
-
-    function formatTimeToDisplay(timeNS) {
-        let timeInSeconds = Math.ceil(timeNS * 10**-9);
-        let timeInMinutes = Math.floor(timeInSeconds / 60);
-        let timeInHours = Math.floor(timeInMinutes / 60);
-
-        timeInSeconds -= timeInMinutes * 60;
-        timeInMinutes -= timeInHours * 60;
-
-        return timeInHours.toString().padStart(2, '0') + ":"
-                + timeInMinutes.toString().padStart(2, '0') + ":"
-                + timeInSeconds.toString().padStart(2, '0')
-    }
-    
+        
     
     init();
 
