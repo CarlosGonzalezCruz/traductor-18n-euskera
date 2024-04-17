@@ -1,6 +1,7 @@
 package es.bilbomatica.traductor.controllers;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -8,6 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -25,7 +27,9 @@ import es.bilbomatica.traductor.DirectorService;
 import es.bilbomatica.traductor.FileRequestQueueService;
 import es.bilbomatica.traductor.exceptions.BusinessException;
 import es.bilbomatica.traductor.exceptions.FileRequestNotReadyException;
+import es.bilbomatica.traductor.model.ErrorMessage;
 import es.bilbomatica.traductor.model.FileRequest;
+import es.bilbomatica.traductor.model.FileRequestInfo;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -63,6 +67,13 @@ public class TraductorController {
     }
 
 
+    @ResponseBody
+    @GetMapping("/request/all")
+    public List<FileRequestInfo> getAllRequestsInfo() {
+        return fileRequestQueueService.getAllRequestsInfo();
+    }
+
+
     @GetMapping("/request/source")
     public void downloadOriginal(HttpServletResponse response, @RequestParam UUID requestId) throws IOException {
         response.setContentType("text/plain");
@@ -88,34 +99,40 @@ public class TraductorController {
 
 
     @DeleteMapping("/request")
-    public void removeFileRequest(@RequestParam UUID requestId) {
+    public void removeFileRequest(HttpServletResponse response, @RequestParam UUID requestId) {
+        fileRequestQueueService.get(requestId).setStatus(FileRequestStatus.CANCELLED);
         fileRequestQueueService.remove(requestId);
         directorService.resume();
+        response.setStatus(200);
     }
 
 
     @DeleteMapping("/request/completed")
-    public void removeCompletedRequests() {
+    public void removeCompletedRequests(HttpServletResponse response) {
         fileRequestQueueService.removeCompleted();
         directorService.resume();
+        response.setStatus(200);
     }
 
 
     @PostMapping("/request/cancel")
-    public void cancelFileRequest(@RequestParam UUID requestId) {
+    public void cancelFileRequest(HttpServletResponse response, @RequestParam UUID requestId) {
         fileRequestQueueService.get(requestId).setStatus(FileRequestStatus.CANCELLED);
         directorService.resume();
+        response.setStatus(200);
     }
 
 
     @ExceptionHandler
-    public void handleException(Exception e) {
+    @ResponseBody
+    public ResponseEntity<ErrorMessage> handleException(Exception e) {
         if(e instanceof BusinessException) {
-            // BusinessException eAsBEx = (BusinessException) e;
-            // progressControllerWS.sendError(new ErrorMessage(eAsBEx.getUserMessage()));
+            BusinessException eAsBEx = (BusinessException) e;
+            return ResponseEntity.badRequest().body(new ErrorMessage(eAsBEx.getUserMessage()));
+            
         } else {
             e.printStackTrace();
-            // progressControllerWS.sendError(new ErrorMessage("Ha ocurrido un problema inesperado en el servidor."));
+            return ResponseEntity.internalServerError().body(new ErrorMessage("Ha ocurrido un problema inesperado con el servidor."));
         }
     }
 

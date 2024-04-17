@@ -15,8 +15,9 @@ public class ProgressUpdate {
     private Optional<Long> remainingTimeNS;
 
     public ProgressUpdate(UUID requestId, FileRequestStatus requestStatus, int current, int total, boolean done, Optional<Long> remainingTimeNS) {
-        this.current = current;
+        this.requestId = requestId;
         this.requestStatus = requestStatus;
+        this.current = current;
         this.total = total;
         this.done = done;
         this.remainingTimeNS = remainingTimeNS;

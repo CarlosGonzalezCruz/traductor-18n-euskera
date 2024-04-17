@@ -14,12 +14,15 @@ import org.springframework.stereotype.Service;
 
 import es.bilbomatica.test.logic.FileRequestStatus;
 import es.bilbomatica.traductor.exceptions.FileRequestNotReadyException;
+import es.bilbomatica.traductor.exceptions.FileRequestQueueAtCapacityException;
 import es.bilbomatica.traductor.model.FileRequest;
 import es.bilbomatica.traductor.model.FileRequestInfo;
 
 @Service
 public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
+    private final int QUEUE_MAX_CAPACITY_FILES = 50;
+    
     private Map<UUID, FileRequest> fileRequests;
     private List<UUID> requestOrder;
     private Optional<Runnable> queueUpdatedCallback;
@@ -33,11 +36,15 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
 
     @Override
-    public void add(FileRequest request) {
+    public void add(FileRequest request) throws FileRequestQueueAtCapacityException {
         UUID requestId = UUID.randomUUID();
         request.setId(Optional.of(requestId));
 
         synchronized(this) {
+            if(fileRequests.size() >= QUEUE_MAX_CAPACITY_FILES) {
+                throw new FileRequestQueueAtCapacityException(QUEUE_MAX_CAPACITY_FILES);
+            }
+
             fileRequests.put(requestId, request);
             requestOrder.add(requestId);
             queueUpdatedCallback.ifPresent(Runnable::run);
@@ -53,7 +60,7 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
     @Override
     public void downloadSource(UUID requestId, OutputStream outputStream) throws IOException {
-        outputStream.write(this.fileRequests.get(requestId).getOriginalFile().getBytes());
+        outputStream.write(this.fileRequests.get(requestId).getOriginalFileBytes());
     }
 
 

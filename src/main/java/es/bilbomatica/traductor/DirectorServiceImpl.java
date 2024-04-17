@@ -1,6 +1,9 @@
 package es.bilbomatica.traductor;
 
 import java.util.Optional;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,8 +15,6 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class DirectorServiceImpl implements DirectorService {
 
-    private final long AUTO_RESUME_WAIT_MS = 60000L;
-
     @Autowired
     private FileRequestQueueService fileRequestQueueService;
 
@@ -23,39 +24,43 @@ public class DirectorServiceImpl implements DirectorService {
     @Autowired
     private ProgressControllerWS progressControllerWS;
 
+    private Lock internalThreadLock;
+    private Condition queueNotEmpty;
+
     private Thread internalThread = new Thread() {
         @Override
         public void run() {
-            synchronized(this) {
+            internalThreadLock.lock();
                 
-                Optional<FileRequest> currentRequest = Optional.empty();
+            Optional<FileRequest> currentRequest = Optional.empty();
+            
+            while(!Thread.interrupted()) {
                 
-                while(!Thread.interrupted()) {
-                    
-                    progressControllerWS.sendRequestList(fileRequestQueueService.getAllRequestsInfo());
-                    currentRequest = fileRequestQueueService.next();
-                    
-                    try {
-                        if(currentRequest.isPresent()) {
-                            traductorService.translateFile(currentRequest.get());
-                            
-                        } else {
-                            this.wait(AUTO_RESUME_WAIT_MS);
-                            
-                        }
+                progressControllerWS.sendRequestList(fileRequestQueueService.getAllRequestsInfo());
+                currentRequest = fileRequestQueueService.next();
+                
+                try {
+                    if(currentRequest.isPresent()) {
+                        traductorService.translateFile(currentRequest.get());
                         
-                    } catch(InterruptedException e) {
-                        Thread.currentThread().interrupt();
+                    } else {
+                        queueNotEmpty.await();
                         
                     }
                     
+                } catch(InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    
                 }
-            }
-            
+                
+            }      
         }
     };
 
-    private DirectorServiceImpl() {};
+    private DirectorServiceImpl() {
+        this.internalThreadLock = new ReentrantLock();
+        this.queueNotEmpty = internalThreadLock.newCondition();
+    }
 
     @Override
     @PostConstruct
@@ -68,8 +73,9 @@ public class DirectorServiceImpl implements DirectorService {
 
     @Override
     public void resume() {
-        synchronized(internalThread) {
-            internalThread.notify();
+        if(internalThreadLock.tryLock()) {
+            queueNotEmpty.signal();
+            internalThreadLock.unlock();
         }
     }
 

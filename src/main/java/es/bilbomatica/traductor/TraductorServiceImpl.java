@@ -15,6 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.client.HttpClientErrorException.TooManyRequests;
 
@@ -49,7 +50,7 @@ public class TraductorServiceImpl implements TraductorService {
 			() -> new IllegalArgumentException("No se permite procesar un FileRequest sin id.")
 		);
 
-		fileRequest.setStatus(FileRequestStatus.PENDING);
+		fileRequest.setStatus(FileRequestStatus.IN_PROGRESS);
 		i18nResourceFile file = fileRequest.getResourceFile();
 
 		Map<String, String> properties = new HashMap<>(file.getProperties());
@@ -126,7 +127,7 @@ public class TraductorServiceImpl implements TraductorService {
 		} catch(TooManyRequests e) {
 			throw new TraductorNeuronalRateLimitException();
 			
-		} catch(HttpClientErrorException e) {
+		} catch(HttpClientErrorException | ResourceAccessException e) {
 			throw new TraductorNeuronalUnreachableException();
 			
 		}

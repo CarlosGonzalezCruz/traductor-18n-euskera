@@ -30,4 +30,5 @@ public class ProgressControllerWS {
     public void sendRequestList(List<FileRequestInfo> requestList) {
         messageSender.convertAndSend("/topic/requests", requestList);
     }
+
 }

@@ -21,6 +21,7 @@ import org.xml.sax.SAXException;
 
 import es.bilbomatica.test.logic.FileRequestStatus;
 import es.bilbomatica.test.logic.I18nResourceFileType;
+import es.bilbomatica.traductor.exceptions.FileRequestQueueAtCapacityException;
 import es.bilbomatica.traductor.exceptions.InvalidI18nResourceTypeException;
 import es.bilbomatica.traductor.exceptions.WrongFormatException;
 import es.bilbomatica.traductor.model.FileRequest;
@@ -48,13 +49,13 @@ public class FileRequestQueueServiceImplTests {
     }
 
     @Test
-    public void testAdd() {
+    public void testAdd() throws FileRequestQueueAtCapacityException {
         fileRequestQueueService.add(fileRequest1);
         assertTrue(fileRequest1.getId().isPresent());
     }
 
     @Test
-    public void testRetrieve() {
+    public void testRetrieve() throws FileRequestQueueAtCapacityException {
         fileRequestQueueService.add(fileRequest1);
         FileRequest retrieved = fileRequestQueueService.get(fileRequest1.getId().get());
 
@@ -62,7 +63,7 @@ public class FileRequestQueueServiceImplTests {
     }
 
     @Test
-    public void testNext_pending() {
+    public void testNext_pending() throws FileRequestQueueAtCapacityException {
         fileRequestQueueService.add(fileRequest2);
         fileRequestQueueService.add(fileRequest1);
 
@@ -73,7 +74,7 @@ public class FileRequestQueueServiceImplTests {
     }
 
     @Test
-    public void testNext_nonePending() {
+    public void testNext_nonePending() throws FileRequestQueueAtCapacityException {
         fileRequestQueueService.add(fileRequest2);
 
         Optional<FileRequest> next = fileRequestQueueService.next();
@@ -82,7 +83,7 @@ public class FileRequestQueueServiceImplTests {
     }
 
     @Test
-    public void testRemove() {
+    public void testRemove() throws FileRequestQueueAtCapacityException {
         fileRequestQueueService.add(fileRequest1);
         fileRequestQueueService.remove(fileRequest1.getId().get());
 
@@ -90,7 +91,7 @@ public class FileRequestQueueServiceImplTests {
     }
 
     @Test
-    public void testRearrange() {
+    public void testRearrange() throws FileRequestQueueAtCapacityException {
         fileRequestQueueService.add(fileRequest1);
         fileRequestQueueService.add(fileRequest2);
         fileRequestQueueService.add(fileRequest3);
@@ -110,7 +111,7 @@ public class FileRequestQueueServiceImplTests {
     }
 
     @Test
-    public void testRearrange_invalidIds() {
+    public void testRearrange_invalidIds() throws FileRequestQueueAtCapacityException {
         fileRequestQueueService.add(fileRequest1);
         fileRequestQueueService.add(fileRequest2);
 

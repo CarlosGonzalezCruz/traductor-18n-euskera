@@ -23,14 +23,16 @@ import es.bilbomatica.traductor.exceptions.WrongFormatException;
 public class FileRequest {
 
     private Optional<UUID> id;
-    private MultipartFile sourceFile;
+    private String sourceName;
+    private byte[] sourceFileBytes;
     private i18nResourceFile fileData;
     private FileRequestStatus status;
     private Optional<String> errorMessage;
 
-    private FileRequest(MultipartFile sourceFile, i18nResourceFile fileData) {
+    private FileRequest(String sourceName, byte[] sourceFileBytes, i18nResourceFile fileData) {
         this.id = Optional.empty();
-        this.sourceFile = sourceFile;
+        this.sourceName = sourceName;
+        this.sourceFileBytes = sourceFileBytes;
         this.fileData = fileData;
         this.status = FileRequestStatus.PENDING;
         this.errorMessage = Optional.empty();
@@ -61,7 +63,7 @@ public class FileRequest {
             throw new InvalidI18nResourceTypeException(filetype);
         }
 
-        return new FileRequest(file, fileData);
+        return new FileRequest(file.getOriginalFilename(), file.getBytes(), fileData);
     }
 
 
@@ -76,12 +78,12 @@ public class FileRequest {
 
 
     public String getSourceName() {
-        return this.sourceFile.getOriginalFilename();
+        return this.sourceName;
     }
 
 
-    public MultipartFile getOriginalFile() {
-        return this.sourceFile;
+    public byte[] getOriginalFileBytes() {
+        return this.sourceFileBytes;
     }
 
 

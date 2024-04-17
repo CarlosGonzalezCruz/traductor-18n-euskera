@@ -1,5 +1,5 @@
 package es.bilbomatica.test.logic;
 
 public enum FileRequestStatus {
-    PENDING, TRANSLATING, DONE, CANCELLED, ERROR
+    PENDING, IN_PROGRESS, DONE, CANCELLED, ERROR
 }

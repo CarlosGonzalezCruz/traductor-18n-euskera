@@ -48,7 +48,7 @@ public class MockMultipartFile implements MultipartFile {
 
     @Override
     public @NonNull byte[] getBytes() throws IOException {
-        throw new UnsupportedOperationException("Unimplemented method 'getBytes'");
+        return this.contents.getBytes();
     }
 
     @Override

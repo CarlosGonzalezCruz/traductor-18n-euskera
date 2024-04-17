@@ -7,12 +7,13 @@ import java.util.Optional;
 import java.util.UUID;
 
 import es.bilbomatica.traductor.exceptions.FileRequestNotReadyException;
+import es.bilbomatica.traductor.exceptions.FileRequestQueueAtCapacityException;
 import es.bilbomatica.traductor.model.FileRequest;
 import es.bilbomatica.traductor.model.FileRequestInfo;
 
 public interface FileRequestQueueService {
 
-    public void add(FileRequest request);
+    public void add(FileRequest request) throws FileRequestQueueAtCapacityException;
 
     public FileRequest get(UUID requestId);
 
