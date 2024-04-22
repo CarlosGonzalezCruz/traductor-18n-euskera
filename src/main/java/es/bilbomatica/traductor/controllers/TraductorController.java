@@ -1,6 +1,7 @@
 package es.bilbomatica.traductor.controllers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +30,9 @@ import es.bilbomatica.traductor.exceptions.BusinessException;
 import es.bilbomatica.traductor.exceptions.FileRequestNotReadyException;
 import es.bilbomatica.traductor.model.ErrorMessage;
 import es.bilbomatica.traductor.model.FileRequest;
-import es.bilbomatica.traductor.model.FileRequestInfo;
+import es.bilbomatica.traductor.model.FileRequestWSInfo;
+import es.bilbomatica.traductor.persistence.FileLocation;
+import es.bilbomatica.traductor.persistence.FileManagerService;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
@@ -41,6 +44,9 @@ public class TraductorController {
     @Autowired
     private FileRequestQueueService fileRequestQueueService;
 
+    @Autowired
+    private FileManagerService fileManagerService;
+
 
     @GetMapping("/")
     public String index() {
@@ -48,15 +54,21 @@ public class TraductorController {
     }
 
 
+    @ResponseBody
     @PostMapping("/request")
-	public void translateFile(HttpServletResponse response,
+	public UUID addFile(HttpServletResponse response,
             @RequestParam Optional<String> filetype,
             @RequestParam MultipartFile file,
             RedirectAttributes redirectAttributes) throws IOException, InterruptedException, XPathExpressionException, ParserConfigurationException, SAXException, BusinessException {
 
-        FileRequest request = FileRequest.create(filetype.orElse(I18nResourceFileType.AUTO.getName()), file);
-        fileRequestQueueService.add(request);
+        UUID sourceFileId = fileManagerService.save(file.getOriginalFilename(), FileLocation.ORIGINAL, o -> file.getInputStream().transferTo(o));
+        String filename = file.getOriginalFilename();
+        InputStream fileStream = file.getInputStream();
+        FileRequest request = FileRequest.create(filetype.orElse(I18nResourceFileType.AUTO.getName()), filename, fileStream, sourceFileId);
+        UUID fileRequestId = fileRequestQueueService.add(request);
         directorService.resume();
+        
+        return fileRequestId;
 	}
 
 
@@ -69,7 +81,7 @@ public class TraductorController {
 
     @ResponseBody
     @GetMapping("/request/all")
-    public List<FileRequestInfo> getAllRequestsInfo() {
+    public List<FileRequestWSInfo> getAllRequestsInfo() {
         return fileRequestQueueService.getAllRequestsInfo();
     }
 
@@ -77,11 +89,13 @@ public class TraductorController {
     @GetMapping("/request/source")
     public void downloadOriginal(HttpServletResponse response, @RequestParam UUID requestId) throws IOException {
         response.setContentType("text/plain");
+
+        FileRequest fileRequest = fileRequestQueueService.get(requestId);
         
         response.addHeader("Content-Disposition", "attachment; filename="
         + fileRequestQueueService.get(requestId).getSourceName());
-        
-        fileRequestQueueService.downloadSource(requestId, response.getOutputStream());
+
+        fileManagerService.load(fileRequest.getSourceFileId()).transferTo(response.getOutputStream());
         response.flushBuffer();
     }
 
@@ -89,18 +103,31 @@ public class TraductorController {
     @GetMapping("/request/translated")
     public void downloadTranslated(HttpServletResponse response, @RequestParam UUID requestId) throws IOException, FileRequestNotReadyException {
         response.setContentType("text/plain");
+
+        FileRequest fileRequest = fileRequestQueueService.get(requestId);
+        if(!FileRequestStatus.DONE.equals(fileRequest.getStatus())) {
+            throw new FileRequestNotReadyException(fileRequest.getSourceName());
+        }
         
         response.addHeader("Content-Disposition", "attachment; filename="
-        + fileRequestQueueService.get(requestId).getResourceFile().getName());
-       
-        fileRequestQueueService.downloadTranslated(requestId, response.getOutputStream());
+        + fileRequestQueueService.get(requestId).getTranslatedName());
+
+        fileManagerService.load(fileRequest.getTranslatedFileId().orElseThrow(
+            () -> new FileRequestNotReadyException(fileRequest.getSourceName()))
+        ).transferTo(response.getOutputStream());
         response.flushBuffer();
     }
 
 
     @DeleteMapping("/request")
-    public void removeFileRequest(HttpServletResponse response, @RequestParam UUID requestId) {
-        fileRequestQueueService.get(requestId).setStatus(FileRequestStatus.CANCELLED);
+    public void removeFileRequest(HttpServletResponse response, @RequestParam UUID requestId) throws IOException {
+        FileRequest fileRequest = fileRequestQueueService.get(requestId);
+        fileRequest.setStatus(FileRequestStatus.CANCELLED);
+        fileManagerService.delete(fileRequest.getSourceFileId());
+        if(fileRequest.getTranslatedFileId().isPresent()) {
+            fileManagerService.delete(fileRequest.getTranslatedFileId().get());
+        }
+
         fileRequestQueueService.remove(requestId);
         directorService.resume();
         response.setStatus(200);
@@ -108,16 +135,16 @@ public class TraductorController {
 
 
     @DeleteMapping("/request/completed")
-    public void removeCompletedRequests(HttpServletResponse response) {
-        fileRequestQueueService.removeCompleted();
-        directorService.resume();
-        response.setStatus(200);
-    }
+    public void removeCompletedRequests(HttpServletResponse response) throws IOException {
+        List<FileRequest> deletedFileRequests = fileRequestQueueService.removeCompleted();
 
+        for(FileRequest request : deletedFileRequests) {
+            fileManagerService.delete(request.getSourceFileId());
+            if(request.getTranslatedFileId().isPresent()) {
+                fileManagerService.delete(request.getTranslatedFileId().get());
+            }
+        }
 
-    @PostMapping("/request/cancel")
-    public void cancelFileRequest(HttpServletResponse response, @RequestParam UUID requestId) {
-        fileRequestQueueService.get(requestId).setStatus(FileRequestStatus.CANCELLED);
         directorService.resume();
         response.setStatus(200);
     }

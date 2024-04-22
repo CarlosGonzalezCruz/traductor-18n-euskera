@@ -1,7 +1,10 @@
 package es.bilbomatica.traductor;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +28,7 @@ import es.bilbomatica.traductor.exceptions.FileRequestQueueAtCapacityException;
 import es.bilbomatica.traductor.exceptions.InvalidI18nResourceTypeException;
 import es.bilbomatica.traductor.exceptions.WrongFormatException;
 import es.bilbomatica.traductor.model.FileRequest;
-import es.bilbomatica.traductor.model.FileRequestInfo;
+import es.bilbomatica.traductor.model.FileRequestWSInfo;
 
 @SpringBootTest
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -40,12 +43,14 @@ public class FileRequestQueueServiceImplTests {
 
     @BeforeEach
     public void setup() throws InvalidI18nResourceTypeException, XPathExpressionException, WrongFormatException, IOException, ParserConfigurationException, SAXException {
-        fileRequest1 = FileRequest.create(I18nResourceFileType.AUTO.getName(), new MockMultipartFile("source1.properties", "key = value"));
+        UUID mockId = new UUID(0L, 0L);
 
-        fileRequest2 = FileRequest.create(I18nResourceFileType.AUTO.getName(), new MockMultipartFile("source2.properties", "key = value"));
+        fileRequest1 = FileRequest.create(I18nResourceFileType.AUTO.getName(), "source1.properties", new ByteArrayInputStream("key = value".getBytes()), mockId);
+
+        fileRequest2 = FileRequest.create(I18nResourceFileType.AUTO.getName(), "source2.properties", new ByteArrayInputStream("key = value".getBytes()), mockId);
         fileRequest2.setStatus(FileRequestStatus.DONE);
 
-        fileRequest3 = FileRequest.create(I18nResourceFileType.AUTO.getName(), new MockMultipartFile("source3.properties", "key = value"));
+        fileRequest3 = FileRequest.create(I18nResourceFileType.AUTO.getName(), "source3.properties", new ByteArrayInputStream("key = value".getBytes()), mockId);
     }
 
     @Test
@@ -103,7 +108,7 @@ public class FileRequestQueueServiceImplTests {
 
         fileRequestQueueService.rearrange(requestIds);
 
-        List<FileRequestInfo> allRequests = fileRequestQueueService.getAllRequestsInfo();
+        List<FileRequestWSInfo> allRequests = fileRequestQueueService.getAllRequestsInfo();
         
         assertEquals(fileRequest3.getId(), allRequests.get(0).getId());
         assertEquals(fileRequest1.getId(), allRequests.get(1).getId());

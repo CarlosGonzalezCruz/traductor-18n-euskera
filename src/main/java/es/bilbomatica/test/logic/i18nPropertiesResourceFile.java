@@ -12,8 +12,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class i18nPropertiesResourceFile implements i18nResourceFile {
 
     private final String UPDATE_NAME_FIND_REGEX = "^(.*)(?<=\\W|_)es(.*)?$";
@@ -27,9 +25,9 @@ public class i18nPropertiesResourceFile implements i18nResourceFile {
         this.name = name;
     }
 
-    public static i18nPropertiesResourceFile load(MultipartFile file) throws IOException {
+    public static i18nPropertiesResourceFile load(String filename, InputStream file) throws IOException {
         Properties properties = new Properties();         
-		InputStream stream = new BufferedInputStream(file.getInputStream());
+		InputStream stream = new BufferedInputStream(file);
 		properties.load(new InputStreamReader(stream, Charset.forName("UTF-8")));
 
 		Map<String, String> ret = new HashMap<>();
@@ -37,7 +35,7 @@ public class i18nPropertiesResourceFile implements i18nResourceFile {
 			ret.put(key, properties.getProperty(key));
 		}
 
-        return new i18nPropertiesResourceFile(ret, file.getOriginalFilename());
+        return new i18nPropertiesResourceFile(ret, filename);
     }
 
     @Override
@@ -67,8 +65,8 @@ public class i18nPropertiesResourceFile implements i18nResourceFile {
     }
 
     @Override
-    public void updateName() {
-        this.name = name.replaceAll(UPDATE_NAME_FIND_REGEX, UPDATE_NAME_REPLACE_REGEX);
+    public String getTranslatedName() {
+        return name.replaceAll(UPDATE_NAME_FIND_REGEX, UPDATE_NAME_REPLACE_REGEX);
     }
 
     @Override

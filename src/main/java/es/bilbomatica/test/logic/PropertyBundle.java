@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 public class PropertyBundle {
 
-    private final static String SEPARATOR = " § ";
+    private final static String SEPARATOR = "§";
     
     private Map<String, Integer> keys;
     private StringBuilder sb;

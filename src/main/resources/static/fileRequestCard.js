@@ -28,13 +28,15 @@ window.exports = window.exports || {};
             ret.handler();
 
             if(requestData.status == "ERROR") {
-                $newCard.find("*[field='progress-error']").removeClass("d-none");
-                $newCard.find("*[field='progress-error-content']").text(requestData.errorMessage);
+                $newCard.find("*[role='progress-error']").removeClass("d-none");
+                $newCard.find("*[role='progress-container']").addClass("d-none");
+                $newCard.find("*[role='progress-error-content']").text(requestData.errorMessage);
             } else {
-                ret.update({
+                $newCard.find("*[role='progress-error']").addClass("d-none");
+                ret.update(requestData.lastProgressUpdate || {
                     current: 0,
                     total: 0,
-                    requestStatus: requestData.status
+                    requestStatus: requestData.status || "PENDING"
                 });
             }
 
@@ -43,6 +45,7 @@ window.exports = window.exports || {};
 
 
         update(data) {
+
             let progressRatio = data.current / data.total * 100;
 
             if(data.requestStatus == "PENDING") {

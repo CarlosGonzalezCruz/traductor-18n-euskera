@@ -1,5 +1,6 @@
 package es.bilbomatica.traductor;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,15 +10,16 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpClientErrorException.TooManyRequests;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.HttpClientErrorException.TooManyRequests;
 
 import es.bilbomatica.test.logic.FileRequestStatus;
 import es.bilbomatica.test.logic.i18nResourceFile;
@@ -37,8 +39,8 @@ public class TraductorServiceImpl implements TraductorService {
 	private ProgressControllerWS progressControllerWS;
 
     private final static Long WAIT_BETWEEN_QUERIES_MS = 0L;
-
 	private final static Long WAIT_IF_ERROR_MS = 1000L;
+	private final static Long TRADUCTOR_NEURONAL_TIMEOUT_MS = 5000L;
 
 	private TraductorServiceImpl() {
 		System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
@@ -51,16 +53,18 @@ public class TraductorServiceImpl implements TraductorService {
 		);
 
 		fileRequest.setStatus(FileRequestStatus.IN_PROGRESS);
-		i18nResourceFile file = fileRequest.getResourceFile();
+		i18nResourceFile file = fileRequest.getFileData();
 
 		Map<String, String> properties = new HashMap<>(file.getProperties());
 		long lastUpdateTimeNS = System.nanoTime();
 		List<Long> timePerUpdateNS = new ArrayList<>();
 		int i = 0;
 
-		progressControllerWS.sendUpdate(new ProgressUpdate(
+		ProgressUpdate update = new ProgressUpdate(
 			requestId, fileRequest.getStatus(), 0, properties.size(), false, Optional.empty()
-		));
+		);
+		fileRequest.setLastProgressUpdate(Optional.of(update));
+		progressControllerWS.sendUpdate(update);
 
 		for(Entry<String, String> property : properties.entrySet()) {
 
@@ -76,9 +80,11 @@ public class TraductorServiceImpl implements TraductorService {
 				lastUpdateTimeNS = System.nanoTime();
 				long remainingTimeNS = calculateRemainingTimeNS(timePerUpdateNS, properties.size());
 				
-				progressControllerWS.sendUpdate(new ProgressUpdate(
+				update = new ProgressUpdate(
 					requestId, fileRequest.getStatus(), i, properties.size(), false, Optional.of(remainingTimeNS)
-				));
+				);
+				fileRequest.setLastProgressUpdate(Optional.of(update));
+				progressControllerWS.sendUpdate(update);
 				
 				Thread.sleep(WAIT_BETWEEN_QUERIES_MS);
 				i++;
@@ -96,13 +102,14 @@ public class TraductorServiceImpl implements TraductorService {
 		
 		if(!FileRequestStatus.CANCELLED.equals(fileRequest.getStatus()) && !FileRequestStatus.ERROR.equals(fileRequest.getStatus())) {
 			file.updateProperties(properties);
-			file.updateName();
 			fileRequest.setStatus(FileRequestStatus.DONE);
 		}
-		
-		progressControllerWS.sendUpdate(new ProgressUpdate(
+
+		update = new ProgressUpdate(
 			requestId, fileRequest.getStatus(), i, properties.size(), true, Optional.empty()
-		));
+		);
+		fileRequest.setLastProgressUpdate(Optional.of(update));
+		progressControllerWS.sendUpdate(update);
 	}
 
 	@SuppressWarnings("null")
@@ -117,9 +124,13 @@ public class TraductorServiceImpl implements TraductorService {
 		request.setText(content);
 
 		HttpEntity<TraductorRequest> entity = new HttpEntity<>(request, headers);
+		RestTemplate rest = new RestTemplateBuilder()
+			.setConnectTimeout(Duration.ofMillis(TRADUCTOR_NEURONAL_TIMEOUT_MS))
+			.setReadTimeout(Duration.ofMillis(TRADUCTOR_NEURONAL_TIMEOUT_MS))
+			.build();
 
 		try {
-			ResponseEntity<TraductorResponse> response = new RestTemplate().exchange("https://api.euskadi.eus/itzuli/es2eu/translate",
+			ResponseEntity<TraductorResponse> response = rest.exchange("https://api.euskadi.eus/itzuli/es2eu/translate",
 					HttpMethod.POST, entity, TraductorResponse.class);
 	
 			return response.getBody().getMessage();

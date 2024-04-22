@@ -56,7 +56,7 @@
                         </button>
                     </div>
 
-                    <div id="file-request-empty-filler" class="d-flex d-none flex-column card-header h-100 justify-content-center">
+                    <div id="file-request-empty-filler" class="d-flex flex-column card-header h-100 justify-content-center">
                         <p class="text-secondary text-center">No hay archivos en cola.</p>
                     </div>
                     <div id="file-request-container" class="d-flex d-none flex-column card-header h-100 overflow-auto">
@@ -140,6 +140,22 @@
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+
+    <div id="disconnectedErrorMessage" class="modal fade" data-bs-backdrop="static" id="errorModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body d-flex flex-row align-items-center">
+                    <div class="flex-grow-1">
+                        <p class="mb-0">
+                            Se ha perdido la conexión con el servidor.<br/>
+                            Intentando reestablecer la conexión...
+                        </p>
+                    </div>
+                    <div class="spinner-border text-primary"></div>
+                </div>
             </div>
         </div>
     </div>

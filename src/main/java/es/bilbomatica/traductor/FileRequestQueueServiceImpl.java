@@ -1,7 +1,5 @@
 package es.bilbomatica.traductor;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -13,10 +11,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 import es.bilbomatica.test.logic.FileRequestStatus;
-import es.bilbomatica.traductor.exceptions.FileRequestNotReadyException;
 import es.bilbomatica.traductor.exceptions.FileRequestQueueAtCapacityException;
 import es.bilbomatica.traductor.model.FileRequest;
-import es.bilbomatica.traductor.model.FileRequestInfo;
+import es.bilbomatica.traductor.model.FileRequestWSInfo;
 
 @Service
 public class FileRequestQueueServiceImpl implements FileRequestQueueService {
@@ -36,7 +33,7 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
 
     @Override
-    public void add(FileRequest request) throws FileRequestQueueAtCapacityException {
+    public UUID add(FileRequest request) throws FileRequestQueueAtCapacityException {
         UUID requestId = UUID.randomUUID();
         request.setId(Optional.of(requestId));
 
@@ -49,6 +46,27 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
             requestOrder.add(requestId);
             queueUpdatedCallback.ifPresent(Runnable::run);
         }
+
+        return requestId;
+    }
+
+
+    @Override
+    public void addAll(List<FileRequest> requests) throws FileRequestQueueAtCapacityException {
+        synchronized(this) {
+            for(FileRequest request : requests) {
+                if(fileRequests.size() >= QUEUE_MAX_CAPACITY_FILES) {
+                    throw new FileRequestQueueAtCapacityException(QUEUE_MAX_CAPACITY_FILES);
+                }
+
+                UUID requestId = UUID.randomUUID();
+                request.setId(Optional.of(requestId));
+                
+                fileRequests.put(requestId, request);
+                requestOrder.add(requestId);
+            }
+        }
+        queueUpdatedCallback.ifPresent(Runnable::run);
     }
 
 
@@ -59,38 +77,19 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
 
     @Override
-    public void downloadSource(UUID requestId, OutputStream outputStream) throws IOException {
-        outputStream.write(this.fileRequests.get(requestId).getOriginalFileBytes());
-    }
-
-
-    @Override
-    public void downloadTranslated(UUID requestId, OutputStream outputStream) throws FileRequestNotReadyException, IOException {
-        FileRequest fileRequest = this.fileRequests.get(requestId);
-        if(!FileRequestStatus.DONE.equals(fileRequest.getStatus())) {
-            throw new FileRequestNotReadyException(fileRequest.getSourceName());
-        }
-        fileRequest.getResourceFile().writeToOutput(outputStream);
-    }
-
-
-    @Override
     public Optional<FileRequest> next() {
-        Optional<FileRequest> ret = Optional.empty();
+        Optional<FileRequest> ret;
 
         synchronized(this) {
-            for(UUID requestId : this.requestOrder) {
-                
-                FileRequest currentRequest = this.fileRequests.get(requestId);
-                
-                if(FileRequestStatus.PENDING.equals(currentRequest.getStatus())) {
-                    ret = Optional.of(currentRequest);
-                    break;
-                    
-                } else {
-                    continue;
-                }
-            }
+            ret = this.requestOrder.stream()
+                .map(fileRequests::get)
+                .filter(r -> FileRequestStatus.IN_PROGRESS.equals(r.getStatus()))
+                .findFirst()
+                .or(() -> this.requestOrder.stream()
+                    .map(fileRequests::get)
+                    .filter(r -> FileRequestStatus.PENDING.equals(r.getStatus()))
+                    .findFirst()
+                );
         }
 
         return ret;
@@ -108,11 +107,17 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
 
     @Override
-    public void removeCompleted() {
+    public List<FileRequest> removeCompleted() {
+        List<FileRequest> ret = new ArrayList<>();
         synchronized(this) {
             List<UUID> requestsToRemove = fileRequests.entrySet().stream()
                 .filter(e -> FileRequestStatus.DONE.equals(e.getValue().getStatus()))
                 .map(e -> e.getKey())
+                .toList();
+
+            ret = fileRequests.entrySet().stream()
+                .filter(e -> requestsToRemove.contains(e.getKey()))
+                .map(e -> e.getValue())
                 .toList();
     
             for(UUID id : requestsToRemove) {
@@ -122,6 +127,8 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
             queueUpdatedCallback.ifPresent(Runnable::run);
         }
+
+        return ret;
     }
 
 
@@ -143,10 +150,18 @@ public class FileRequestQueueServiceImpl implements FileRequestQueueService {
 
 
     @Override
-    public List<FileRequestInfo> getAllRequestsInfo() {
+    public List<FileRequest> getAllRequests() {
         return requestOrder.stream()
-            .map(id -> fileRequests.get(id))
-            .map(FileRequestInfo::from)
+            .map(fileRequests::get)
+            .toList();
+    }
+
+
+    @Override
+    public List<FileRequestWSInfo> getAllRequestsInfo() {
+        return requestOrder.stream()
+            .map(fileRequests::get)
+            .map(FileRequestWSInfo::from)
             .toList();
     }
 
