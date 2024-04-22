@@ -5,22 +5,24 @@ import java.util.UUID;
 
 import es.bilbomatica.test.logic.FileRequestStatus;
 
-public class FileRequestInfo {
+public class FileRequestWSInfo {
 
     private Optional<UUID> id;
     private FileRequestStatus status;
     private String sourceName;
     private Optional<String> errorMessage;
+    private Optional<ProgressUpdate> lastProgressUpdate;
 
-    public FileRequestInfo(Optional<UUID> id, FileRequestStatus status, String sourceName, Optional<String> errorMessage) {
+    public FileRequestWSInfo(Optional<UUID> id, FileRequestStatus status, String sourceName, Optional<String> errorMessage, Optional<ProgressUpdate> lastProgressUpdate) {
         this.id = id;
         this.status = status;
         this.sourceName = sourceName;
         this.errorMessage = errorMessage;
+        this.lastProgressUpdate = lastProgressUpdate;
     }
 
-    public static FileRequestInfo from(FileRequest request) {
-        return new FileRequestInfo(request.getId(), request.getStatus(), request.getSourceName(), request.getErrorMessage());
+    public static FileRequestWSInfo from(FileRequest request) {
+        return new FileRequestWSInfo(request.getId(), request.getStatus(), request.getSourceName(), request.getErrorMessage(), request.getLastProgressUpdate());
     }
 
     public Optional<UUID> getId() {
@@ -53,5 +55,13 @@ public class FileRequestInfo {
 
     public void setErrorMessage(Optional<String> errorMessage) {
         this.errorMessage = errorMessage;
+    }
+
+    public Optional<ProgressUpdate> getLastProgressUpdate() {
+        return this.lastProgressUpdate;
+    }
+
+    public void setLastProgressUpdate(Optional<ProgressUpdate> progressUpdate) {
+        this.lastProgressUpdate = progressUpdate;
     }
 }

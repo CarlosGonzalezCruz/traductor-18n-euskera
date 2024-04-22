@@ -23,11 +23,10 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
@@ -51,8 +50,8 @@ public class i18nXMLResourceFile implements i18nResourceFile {
         this.xmlDocument = xmlDocument;
     }
 
-    public static i18nXMLResourceFile load(MultipartFile file) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, WrongFormatException {        
-		InputStream stream = new BufferedInputStream(file.getInputStream());
+    public static i18nXMLResourceFile load(String filename, InputStream file) throws IOException, ParserConfigurationException, SAXException, XPathExpressionException, WrongFormatException {        
+		InputStream stream = new BufferedInputStream(file);
 
         DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = builderFactory.newDocumentBuilder();
@@ -61,10 +60,10 @@ public class i18nXMLResourceFile implements i18nResourceFile {
             Document xmlDocument = builder.parse(stream);
             Map<String, String> ret = parseXMLIntoProperties(xmlDocument);
 
-            return new i18nXMLResourceFile(ret, file.getOriginalFilename(), xmlDocument);
+            return new i18nXMLResourceFile(ret, filename, xmlDocument);
 
         } catch(SAXParseException e) {
-            throw new WrongFormatException(file.getOriginalFilename(), I18nResourceFileType.XML.getName());
+            throw new WrongFormatException(filename, I18nResourceFileType.XML.getName());
 
         }
 
@@ -97,8 +96,8 @@ public class i18nXMLResourceFile implements i18nResourceFile {
     }
 
     @Override
-    public void updateName() {
-        // No hacer nada, intencionalmente
+    public String getTranslatedName() {
+        return this.name; // No hacer nada, intencionalmente
     }
 
     @Override

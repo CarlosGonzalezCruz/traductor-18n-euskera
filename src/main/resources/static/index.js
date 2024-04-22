@@ -8,20 +8,24 @@ window.exports = window.exports || {};
         stompClient = new StompJs.Client({
             brokerURL: 'ws://' + window.location.host + '/progress',
             onConnect: () => {
+                console.log("Cliente conectado");
                 stompClient.subscribe('/topic/updates', updateCards);
                 stompClient.subscribe('/topic/requests', m => renderAllRequests(JSON.parse(m.body)));
+                
+                $("#disconnectedErrorMessage").modal("hide");
+                getCurrentRequests();
             },
             onDisconnect: () => {
-
-            }
+                console.log("Cliente desconectado");
+            },
+            reconnectDelay: 1000
         });
+
+        stompClient.onWebSocketClose = function(e) {
+            $("#disconnectedErrorMessage").modal("show");
+        }
 
         stompClient.activate();
-
-        fetch("/request/all").then(async function(response) {
-            let requests = await response.json();
-            renderAllRequests(requests);
-        });
 
         $("#main-form").on("submit", function(e) {
             e.preventDefault();
@@ -59,6 +63,7 @@ window.exports = window.exports || {};
             let parsedResponse = await response.json();
             renderErrorMessage(parsedResponse.errorMessage);
         } else {
+            console.log(await response.text());
             $("#file-upload-field").val(null).trigger("change");
             setTimeout(() => $("#file-request-container > div").last()[0]
                 .scrollIntoView({ behavior: "smooth", block: "end" }),
@@ -74,6 +79,13 @@ window.exports = window.exports || {};
         if(requestCard) {
             requestCard.update(data);
         }
+    }
+
+
+    async function getCurrentRequests() {
+        let response = await fetch("/request/all")
+        let requests = await response.json();
+        renderAllRequests(requests);
     }
 
 

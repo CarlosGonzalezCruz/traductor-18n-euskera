@@ -8,7 +8,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
-import es.bilbomatica.traductor.model.FileRequestInfo;
+import es.bilbomatica.traductor.model.FileRequestWSInfo;
 import es.bilbomatica.traductor.model.ProgressUpdate;
 
 @Controller
@@ -27,7 +27,7 @@ public class ProgressControllerWS {
         messageSender.convertAndSend("/topic/updates", update);
     }
 
-    public void sendRequestList(List<FileRequestInfo> requestList) {
+    public void sendRequestList(List<FileRequestWSInfo> requestList) {
         messageSender.convertAndSend("/topic/requests", requestList);
     }
 

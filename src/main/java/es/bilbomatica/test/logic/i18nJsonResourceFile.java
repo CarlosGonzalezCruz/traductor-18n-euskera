@@ -10,11 +10,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Map.Entry;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -34,18 +31,18 @@ public class i18nJsonResourceFile implements i18nResourceFile {
         this.name = name;
     }
 
-    public static i18nJsonResourceFile load(MultipartFile file) throws IOException, WrongFormatException {
+    public static i18nJsonResourceFile load(String filename, InputStream file) throws IOException, WrongFormatException {
         ObjectMapper mapper = new ObjectMapper();         
-		InputStream stream = new BufferedInputStream(file.getInputStream());
+		InputStream stream = new BufferedInputStream(file);
 
         try {
             Map<?, ?> map = mapper.readValue(stream, Map.class);
             Map<String, String> flatMap = flattenHierarchy(map, "");
     
-            return new i18nJsonResourceFile(flatMap, file.getOriginalFilename());
+            return new i18nJsonResourceFile(flatMap, filename);
 
         } catch(JsonParseException e) {
-            throw new WrongFormatException(file.getOriginalFilename(), I18nResourceFileType.JSON.getName());
+            throw new WrongFormatException(filename, I18nResourceFileType.JSON.getName());
 
         }
     }
@@ -77,8 +74,8 @@ public class i18nJsonResourceFile implements i18nResourceFile {
     }
 
     @Override
-    public void updateName() {
-        this.name = name.replaceAll(UPDATE_NAME_FIND_REGEX, UPDATE_NAME_REPLACE_REGEX);
+    public String getTranslatedName() {
+        return name.replaceAll(UPDATE_NAME_FIND_REGEX, UPDATE_NAME_REPLACE_REGEX);
     }
 
     @Override
@@ -86,6 +83,7 @@ public class i18nJsonResourceFile implements i18nResourceFile {
         ObjectMapper mapper = new ObjectMapper();
         mapper.writeValue(stream, restoreHierarchy(properties));
     }
+
 
     private static Map<String, String> flattenHierarchy(Map<?, ?> properties, String keyPrefix) {
         Map<String, String> ret = new HashMap<>();
@@ -99,6 +97,7 @@ public class i18nJsonResourceFile implements i18nResourceFile {
         return ret;
     }
 
+    
     private static Map<String, Object> restoreHierarchy(Map<String, String> properties) {
         Map<String, Object> ret = new HashMap<>();
         for(Entry<String, String> property : properties.entrySet()) {

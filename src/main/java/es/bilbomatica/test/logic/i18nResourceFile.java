@@ -17,7 +17,7 @@ public interface i18nResourceFile {
 
     void updateProperties(Map<String, String> newProperties);
 
-    void updateName();
+    String getTranslatedName();
 
     void writeToOutput(OutputStream stream) throws IOException;
 }
